@@ -1,0 +1,514 @@
+openapi: '3.0.2'
+info:
+  title:  Sepatuku API
+  description: Group 3 Project
+  termsOfService: http://example.com/terms/
+  contact:
+    name: API Support
+    url: http://www.example.com/support
+    email: support@example.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: '1.0.0'
+servers:
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/iffakhry/nasrul-api/1.0.0
+    variables:
+      environment: 
+        default: dev
+        enum:
+          - "prod"
+          - "dev"
+tags:
+  - name: Auth
+    description: Authentication
+  - name: Users
+    description: User control
+paths:
+  /login:
+    post:
+      tags:
+        - Auth
+      summary: login user
+      description: Login user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/requestLogin'
+            examples:
+              userData1:
+                description: "Example data user"
+                value: {
+                  identifier: "nasrul@alterra.id",
+                  password: "inipassword"
+                }
+              userData2:
+                description: "Example data user"
+                value: {
+                  identifier: "nasrul123",
+                  password: "inipassword"
+                }
+      responses:
+        '200':
+          description: Success Response
+          content:
+            application/json:
+              examples:
+                responseData1:
+                  description: response success 1
+                  value: {
+                    code: 200,
+                    status: "success",
+                    message: "Login Success",
+                    data: {
+                      token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2MzgzMjYxODAsInVzZXJJZCI6MSwidXNlcm5hbWUiOiJhZG1pbiJ9.AebFR-oQjUSOMez2ucDWkiMrS2eQIPmcYm5c71qZ_co"
+                    }
+                  }
+                responseData2:
+                  description: response success 2
+                  value: {
+                    code: 200,
+                    status: "success",
+                    message: "Login Success",
+                    data: {
+                      token: "AyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2MzgzMjYxODAsInVzZXJJZCI6MSwidXNlcm5hbWUiOiJhZG1pbiJ9.AebFR-oQjUSOMez2ucDWkiMrS2eQIPmcYm5c71qZ_co"
+                    }
+                  }
+
+        '400':
+          description: Success Response
+          content:
+            application/json:
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: {
+                    code: 400,
+                    status: "failed",
+                    message: "Login Failed. Email and Password incorrect."
+                  }
+                responseData2:
+                  description: response failed 2
+                  value: {
+                    code: 400,
+                    status: "failed",
+                    message: "Login Failed. Your email doesn't match any entry"
+                  }
+  /users:
+    post:
+      tags:
+        - Users
+      summary: register
+      description: Register user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/requestUserData'
+            examples:
+              userData1:
+                description: "Example data user"
+                value: {
+                  name: "ini nama",
+                  email: "nama@mail.id",
+                  password: "inipassword",
+                  address: "Jakarta",
+                  phone: "082333444555"
+                }
+              userData2:
+                description: "Example data user"
+                value: {
+                  name: "Alta 2",
+                  email: "alta2@alterra.id",
+                  password: "inipassword2",
+                  address: "Jakarta2",
+                  phone: "082333444555"
+                }
+      responses:
+        '200':
+          $ref: '#/components/responses/registerSuccess'
+        '400':
+          $ref: '#/components/responses/registerFailed'
+  /users/{id}:
+    get:
+      tags:
+        - Users
+      description: Get User by ID
+      security:
+        - JWTAuth: []
+      parameters:
+        - name: id
+          description: id user
+          in: path
+          schema:
+            type: integer
+            example: 1
+          required: true
+      responses:
+        '200':
+          $ref: '#/components/responses/getUserProfileSuccess'
+        '400':
+          $ref: '#/components/responses/getUserProfileFailed'
+    put:
+      tags:
+        - Users
+      description: Edit user profile
+      security:
+        - JWTAuth: []
+      parameters:
+        - name: id
+          description: id user
+          in: path
+          schema:
+            type: integer
+            example: 1
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: bujang
+                email:
+                  type: string
+                  example: bujang@mail.com
+                password:
+                  type: string
+                  example: inipasswordbaru
+      responses:
+        '200':
+          $ref: '#/components/responses/editUserProfileSuccess'
+        '400':
+          $ref: '#/components/responses/editUserProfileFailed'
+    delete:
+      tags:
+        - Users
+      description: Delete User by ID
+      security:
+        - JWTAuth: []
+      parameters:
+        - name: id
+          description: id user
+          in: path
+          schema:
+            type: integer
+            example: 1
+          required: true
+      responses:
+        '200':
+          $ref: '#/components/responses/responseSuccess'
+        '400':
+          $ref: '#/components/responses/responseFailed'
+
+#==================================#
+#    COMPONENT
+#==================================#
+components:
+
+  #==================================#    
+  #    JWT
+  #==================================#
+  securitySchemes:
+    JWTAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: "use Token"
+  #==================================#
+  #    SCHEMAS
+  #==================================#
+  schemas:
+    requestLogin:
+      type: object
+      properties:
+        "identifier":
+          type: string
+          minLength: 1
+        "password":
+          type: string
+          minLength: 1
+    requestUserData:
+      type: object
+      properties:
+        "name":
+          type: string
+          minLength: 1
+        "email":
+          type: string
+          minLength: 1
+        "password":
+          type: string
+          minLength: 1
+        "address":
+          type: string
+          minLength: 1
+    responseUserData:
+      type: object
+      properties:
+        "id":
+          type: number
+          minLength: 1
+        "name":
+          type: string
+          minLength: 1
+        "email":
+          type: string
+          minLength: 1
+        "address":
+          type: string
+          minLength: 1
+    successGetSingleUserResponse:
+      type: object
+      properties: {
+        "code":{
+          type: number
+        },
+        "message": {
+          type: string
+        },
+        "status": {
+          type: string
+        },
+        "data": {
+          type: object
+        }
+      }
+    successGetAllUserResponse:
+      type: object
+      properties: {
+        "code":{
+          type: number
+        },
+        "message": {
+          type: string
+        },
+        "status": {
+          type: string
+        },
+        "data": {
+          type: array,
+          items: {
+            type: object
+          }
+        }
+      }
+  #==================================#    
+  #    PARAMETERS
+  #==================================#
+  # parameters:
+  #   dataBook:
+  #     name: "dataBook"
+  #     in: query 
+
+  requestBodies:
+    userData:
+      content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/requestUserData'
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Alta
+                email:
+                  type: string
+                  example: alta@mail.com
+                password:
+                  type: string
+                  example: inipassword
+                address:
+                  type: string
+                  example: Jakarta
+
+  responses:
+    #==================================#
+    #    RESPONSE FOR GENERAL REQUEST
+    #==================================#
+    responseSuccess:
+      description: Successful Operation
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 200
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: Successful Operation
+    responseFailed:
+      description: register failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 400
+              status:
+                type: string
+                example: failed
+              message:
+                type: string
+                example: Bad Request
+    #==================================#
+    #    RESPONSE REGISTER USER
+    #==================================#
+    registerSuccess:
+      description: register success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: Register Success
+    registerFailed:
+      description: register failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: fail
+              message:
+                type: string
+                example: Register Failed
+    #==================================#
+    #    RESPONSE LOGIN USER
+    #==================================#
+    loginSuccess:
+      description: login success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 200
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: Login Success
+              data:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJ1c2VySWQiOjExfQ.YQ47sxFkIfbDVyQ5o6ix38w4BYxnNOPG3F5isqkyyv8
+    loginFailed:
+      description: login failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 400
+              status:
+                type: string
+                example: fail
+              message:
+                type: string
+                example: Login Failed
+    #==================================#
+    #    RESPONSE GET USER PROFILE
+    #==================================#
+    getUserProfileSuccess:
+      description: success get user profile
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 200
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: Success Get User Profile
+              data:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: sepatu
+                  email:
+                    type: string
+                    example: sepatu@mail.com
+                  address:
+                    type: string
+                    example: Surabaya
+                  phone:
+                    type: string
+                    example: 082333444555
+    getUserProfileFailed:
+      description: fail to get user profile
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 400
+              status:
+                type: string
+                example: failed
+              message:
+                type: string
+                example: Fail to Get User Profile
+    #==================================#
+    #    RESPONSE EDIT USER PROFILE
+    #==================================#
+    editUserProfileSuccess:
+      description: success change user profile
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: Success Update Profile
+    editUserProfileFailed:
+      description: fail to change user profile
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: fail
+              message:
+                type: string
+                example: Fail to Update Profile

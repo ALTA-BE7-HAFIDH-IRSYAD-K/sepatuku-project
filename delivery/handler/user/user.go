@@ -27,14 +27,14 @@ func (uh *UserHandler) GetUserHandler() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, response.ResponseFailed("Bad Request"))
 		}
 		id := idToken
-		users, rows, err := uh.userService.GetUser(id)
+		user, rows, err := uh.userService.GetUser(id)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("Failed to fetch data"))
 		}
 		if rows == 0 {
 			return c.JSON(http.StatusBadRequest, response.ResponseFailed("data not exist"))
 		}
-		return c.JSON(http.StatusOK, response.ResponseSuccess("success get data", users))
+		return c.JSON(http.StatusOK, response.ResponseSuccess("success get data", user))
 	}
 }
 
@@ -64,11 +64,11 @@ func (uh *UserHandler) CreateUserHandler() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var user _entities.User
 		c.Bind(&user)
-		users, err := uh.userService.CreateUser(user)
+		user, err := uh.userService.CreateUser(user)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("Failed create data"))
 		}
-		return c.JSON(http.StatusOK, response.ResponseSuccess("Succes create data", users))
+		return c.JSON(http.StatusOK, response.ResponseSuccess("Succes create data", user))
 	}
 }
 
@@ -79,7 +79,7 @@ func (uh *UserHandler) UpdatedUserHandler() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, response.ResponseFailed("Bad Request"))
 		}
 		id := idToken
-		users, rows, err := uh.userService.GetUser(id)
+		user, rows, err := uh.userService.GetUser(id)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("Failed fetch data"))
 		}
@@ -89,11 +89,11 @@ func (uh *UserHandler) UpdatedUserHandler() echo.HandlerFunc {
 		if idToken != id {
 			return c.JSON(http.StatusBadRequest, response.ResponseFailed("Bad Request"))
 		}
-		c.Bind(&users)
-		users, err = uh.userService.UpdatedUser(users, id)
+		c.Bind(&user)
+		user, err = uh.userService.UpdatedUser(user, id)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("Failed edit data"))
 		}
-		return c.JSON(http.StatusOK, response.ResponseSuccess("Success edit data", users))
+		return c.JSON(http.StatusOK, response.ResponseSuccess("Success edit data", user))
 	}
 }

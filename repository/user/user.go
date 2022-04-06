@@ -17,28 +17,28 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 }
 
 func (ur *UserRepository) GetUser(id int) (_entities.User, int, error) {
-	var users _entities.User
-	tx := ur.database.Find(&users, id)
+	var user _entities.User
+	tx := ur.database.Find(&user, id)
 	if tx.Error != nil {
-		return users, 0, tx.Error
+		return user, 0, tx.Error
 	}
 	if tx.RowsAffected == 0 {
-		return users, 0, tx.Error
+		return user, 0, tx.Error
 	}
-	return users, int(tx.RowsAffected), nil
+	return user, int(tx.RowsAffected), nil
 }
 
 func (ur *UserRepository) DeleteUser(id int) (_entities.User, error) {
-	var users _entities.User
-	tx := ur.database.Delete(&users, id)
+	var user _entities.User
+	tx := ur.database.Delete(&user, id)
 	if tx.Error != nil {
-		return users, tx.Error
+		return user, tx.Error
 	}
 	if tx.RowsAffected == 0 {
-		return users, tx.Error
+		return user, tx.Error
 
 	}
-	return users, nil
+	return user, nil
 }
 func (ur *UserRepository) CreateUser(user _entities.User) (_entities.User, error) {
 	tx := ur.database.Save(&user)
@@ -51,13 +51,13 @@ func (ur *UserRepository) CreateUser(user _entities.User) (_entities.User, error
 	}
 	return user, nil
 }
-func (ur *UserRepository) UpdatedUser(users _entities.User) (_entities.User, error) {
-	tx := ur.database.Save(&users)
+func (ur *UserRepository) UpdatedUser(user _entities.User) (_entities.User, error) {
+	tx := ur.database.Save(&user)
 	if tx.Error != nil {
-		return users, tx.Error
+		return user, tx.Error
 	}
 	if tx.RowsAffected == 0 {
-		return users, tx.Error
+		return user, tx.Error
 	}
-	return users, nil
+	return user, nil
 }

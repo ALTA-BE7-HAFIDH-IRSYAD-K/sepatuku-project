@@ -25,6 +25,8 @@ tags:
     description: Authentication
   - name: Users
     description: User control
+  - name: Products
+    description: Product control
 paths:
   /login:
     post:
@@ -61,7 +63,7 @@ paths:
                   value: {
                     code: 200,
                     status: "success",
-                    message: "Login Success",
+                    message: "Login Successfully",
                     data: {
                       token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2MzgzMjYxODAsInVzZXJJZCI6MSwidXNlcm5hbWUiOiJhZG1pbiJ9.AebFR-oQjUSOMez2ucDWkiMrS2eQIPmcYm5c71qZ_co"
                     }
@@ -71,7 +73,7 @@ paths:
                   value: {
                     code: 200,
                     status: "success",
-                    message: "Login Success",
+                    message: "Login Successfully",
                     data: {
                       token: "AyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2MzgzMjYxODAsInVzZXJJZCI6MSwidXNlcm5hbWUiOiJhZG1pbiJ9.AebFR-oQjUSOMez2ucDWkiMrS2eQIPmcYm5c71qZ_co"
                     }
@@ -87,14 +89,14 @@ paths:
                   value: {
                     code: 400,
                     status: "failed",
-                    message: "Login Failed. Email and Password incorrect."
+                    message: "user not found"
                   }
                 responseData2:
                   description: response failed 2
                   value: {
                     code: 400,
                     status: "failed",
-                    message: "Login Failed. Your email doesn't match any entry"
+                    message: "password incorrect"
                   }
   /users:
     post:
@@ -112,41 +114,33 @@ paths:
               userData1:
                 description: "Example data user"
                 value: {
-                  name: "ini nama",
-                  email: "nama@mail.id",
+                  username: "sepatu",
+                  email: "sepatu@mail.com",
                   password: "inipassword",
-                  address: "Jakarta",
+                  address: "Surabaya",
                   phone: "082333444555"
                 }
               userData2:
                 description: "Example data user"
                 value: {
-                  name: "Alta 2",
+                  username: "Alta 2",
                   email: "alta2@alterra.id",
                   password: "inipassword2",
                   address: "Jakarta2",
-                  phone: "082333444555"
+                  phone: "082333444666"
                 }
       responses:
         '200':
-          $ref: '#/components/responses/registerSuccess'
+          $ref: '#/components/responses/registerUserSuccess'
         '400':
-          $ref: '#/components/responses/registerFailed'
-  /users/{id}:
+          $ref: '#/components/responses/registerUserFailed'
     get:
       tags:
         - Users
+      summary: get user profile
       description: Get User by ID
       security:
         - JWTAuth: []
-      parameters:
-        - name: id
-          description: id user
-          in: path
-          schema:
-            type: integer
-            example: 1
-          required: true
       responses:
         '200':
           $ref: '#/components/responses/getUserProfileSuccess'
@@ -155,24 +149,17 @@ paths:
     put:
       tags:
         - Users
+      summary: edit user profile
       description: Edit user profile
       security:
         - JWTAuth: []
-      parameters:
-        - name: id
-          description: id user
-          in: path
-          schema:
-            type: integer
-            example: 1
-          required: true
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                name:
+                username:
                   type: string
                   example: bujang
                 email:
@@ -181,6 +168,12 @@ paths:
                 password:
                   type: string
                   example: inipasswordbaru
+                address:
+                  type: string
+                  example: ini alamat baru
+                phone:
+                  type: string
+                  example: "082333444777"
       responses:
         '200':
           $ref: '#/components/responses/editUserProfileSuccess'
@@ -189,6 +182,7 @@ paths:
     delete:
       tags:
         - Users
+      summary: delete user
       description: Delete User by ID
       security:
         - JWTAuth: []
@@ -205,7 +199,122 @@ paths:
           $ref: '#/components/responses/responseSuccess'
         '400':
           $ref: '#/components/responses/responseFailed'
-
+  /products:
+    post:
+      tags:
+        - Products
+      summary: create product
+      description: Create Product
+      security:
+        - JWTAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/requestUserData'
+            examples:
+              productData:
+                description: "Example data product"
+                value: {
+                  user_id: 1,
+                  name_product: "sepatu tua",
+                  description: "sepatu ini bisa bikin tua",
+                  price: 100000,
+                  image: "images",
+                  stock: 2
+                }
+      responses:
+        '200':
+          $ref: '#/components/responses/ProductSuccess'
+        '400':
+          $ref: '#/components/responses/ProductFailed'
+    get:
+      tags:
+        - Products
+      summary: get all product
+      description: Create Product
+      responses:
+        '200':
+          $ref: '#/components/responses/ProductSuccess'
+        '400':
+          $ref: '#/components/responses/ProductFailed'
+  /products/{id}:
+    get:
+      tags:
+        - Products
+      summary: get product by id
+      description: get Product
+      parameters:
+        - name: id
+          description: id product
+          in: path
+          schema:
+            type: integer
+            example: 1
+          required: true
+      responses:
+        '200':
+          $ref: '#/components/responses/ProductSuccess'
+        '400':
+          $ref: '#/components/responses/ProductFailed'
+    put:
+      tags:
+        - Products
+      summary: edit product
+      description: edit Product
+      security:
+        - JWTAuth: []
+      parameters:
+        - name: id
+          description: id product
+          in: path
+          schema:
+            type: integer
+            example: 1
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/requestUserData'
+            examples:
+              productData:
+                description: "Example data product"
+                value: {
+                  user_id: 1,
+                  name_product: "sepatu muda",
+                  description: "sepatu ini bisa bikin muda",
+                  price: 50000,
+                  image: "images",
+                  stock: 2
+                }
+      responses:
+        '200':
+          $ref: '#/components/responses/editProductSuccess'
+        '400':
+          $ref: '#/components/responses/editProductFailed'
+    delete:
+      tags:
+        - Products
+      summary: delete product
+      description: delete Product
+      security:
+        - JWTAuth: []
+      parameters:
+        - name: id
+          description: id product
+          in: path
+          schema:
+            type: integer
+            example: 1
+          required: true
+      responses:
+        '200':
+          $ref: '#/components/responses/responseSuccess'
+        '400':
+          $ref: '#/components/responses/responseFailed'
 #==================================#
 #    COMPONENT
 #==================================#
@@ -236,7 +345,7 @@ components:
     requestUserData:
       type: object
       properties:
-        "name":
+        "username":
           type: string
           minLength: 1
         "email":
@@ -248,89 +357,34 @@ components:
         "address":
           type: string
           minLength: 1
-    responseUserData:
+        "phone":
+          type: string
+          minLength: 1
+    requestProductData:
       type: object
       properties:
-        "id":
-          type: number
+        "user_id":
+          type: integer
           minLength: 1
-        "name":
+        "name_product":
           type: string
           minLength: 1
-        "email":
+        "description":
           type: string
+          minLength: 1
+        "price":
+          type: integer
           minLength: 1
         "address":
           type: string
           minLength: 1
-    successGetSingleUserResponse:
-      type: object
-      properties: {
-        "code":{
-          type: number
-        },
-        "message": {
+        "phone":
           type: string
-        },
-        "status": {
-          type: string
-        },
-        "data": {
-          type: object
-        }
-      }
-    successGetAllUserResponse:
-      type: object
-      properties: {
-        "code":{
-          type: number
-        },
-        "message": {
-          type: string
-        },
-        "status": {
-          type: string
-        },
-        "data": {
-          type: array,
-          items: {
-            type: object
-          }
-        }
-      }
-  #==================================#    
-  #    PARAMETERS
-  #==================================#
-  # parameters:
-  #   dataBook:
-  #     name: "dataBook"
-  #     in: query 
-
-  requestBodies:
-    userData:
-      content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/requestUserData'
-              type: object
-              properties:
-                name:
-                  type: string
-                  example: Alta
-                email:
-                  type: string
-                  example: alta@mail.com
-                password:
-                  type: string
-                  example: inipassword
-                address:
-                  type: string
-                  example: Jakarta
-
-  responses:
+          minLength: 1
     #==================================#
     #    RESPONSE FOR GENERAL REQUEST
     #==================================#
+  responses:
     responseSuccess:
       description: Successful Operation
       content:
@@ -366,37 +420,8 @@ components:
     #==================================#
     #    RESPONSE REGISTER USER
     #==================================#
-    registerSuccess:
-      description: register success
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: success
-              message:
-                type: string
-                example: Register Success
-    registerFailed:
-      description: register failed
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: fail
-              message:
-                type: string
-                example: Register Failed
-    #==================================#
-    #    RESPONSE LOGIN USER
-    #==================================#
-    loginSuccess:
-      description: login success
+    registerUserSuccess:
+      description: success to register
       content:
         application/json:
           schema:
@@ -410,15 +435,24 @@ components:
                 example: success
               message:
                 type: string
-                example: Login Success
+                example: register successfully
               data:
                 type: object
                 properties:
-                  token:
+                  name:
                     type: string
-                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJ1c2VySWQiOjExfQ.YQ47sxFkIfbDVyQ5o6ix38w4BYxnNOPG3F5isqkyyv8
-    loginFailed:
-      description: login failed
+                    example: sepatu
+                  email:
+                    type: string
+                    example: sepatu@mail.com
+                  address:
+                    type: string
+                    example: Surabaya
+                  phone:
+                    type: string
+                    example: "082333444555"
+    registerUserFailed:
+      description: fail to register
       content:
         application/json:
           schema:
@@ -429,10 +463,10 @@ components:
                 example: 400
               status:
                 type: string
-                example: fail
+                example: failed
               message:
                 type: string
-                example: Login Failed
+                example: register failed
     #==================================#
     #    RESPONSE GET USER PROFILE
     #==================================#
@@ -493,12 +527,30 @@ components:
           schema:
             type: object
             properties:
+              code:
+                type: number
+                example: 200
               status:
                 type: string
                 example: success
               message:
                 type: string
-                example: Success Update Profile
+                example: Success to Update Profile
+              data:
+                type: object
+                properties:
+                  username:
+                    type: string
+                    example: bujang
+                  email:
+                    type: string
+                    example: bujang@mail.com
+                  address:
+                    type: string
+                    example: ini alamat baru
+                  phone:
+                    type: string
+                    example: "082333444777"
     editUserProfileFailed:
       description: fail to change user profile
       content:
@@ -512,3 +564,103 @@ components:
               message:
                 type: string
                 example: Fail to Update Profile
+    #==================================#
+    #    RESPONSE EDIT PRODUCT
+    #==================================#
+    editProductSuccess:
+      description: success change product
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 200
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: Success Update Product
+              data:
+                type: object
+                properties:
+                  name_product:
+                    type: string
+                    example: sepatu muda
+                  descripton:
+                    type: string
+                    example: sepatu ini bisa bikin muda
+                  price:
+                    type: integer
+                    example: 50000
+                  image:
+                    type: string
+                    example: "images"
+                  stock:
+                    type: integer
+                    example: 2  
+    editProductFailed:
+      description: fail to change product
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: fail
+              message:
+                type: string
+                example: Fail to Update Profile
+    #==================================#
+    #    RESPONSE PRODUCT
+    #==================================#
+    ProductSuccess:
+      description: Operation success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 200
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: Success Update Product
+              data:
+                type: object
+                properties:
+                  name_product:
+                    type: string
+                    example: sepatu tua
+                  descripton:
+                    type: string
+                    example: sepatu ini bisa bikin tua
+                  price:
+                    type: integer
+                    example: 100000
+                  image:
+                    type: string
+                    example: "images"
+                  stock:
+                    type: integer
+                    example: 2  
+    ProductFailed:
+      description: Operation failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              message:
+                type: string
+                example: Fail to fetch data

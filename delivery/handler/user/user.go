@@ -6,7 +6,6 @@ import (
 	"sepatuku-project/delivery/response"
 	_entities "sepatuku-project/entity/user"
 	_userService "sepatuku-project/service/user"
-	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -27,17 +26,13 @@ func (uh *UserHandler) GetUserHandler() echo.HandlerFunc {
 		if tokenerr != nil {
 			return c.JSON(http.StatusBadRequest, response.ResponseFailed("Bad Request"))
 		}
-		idn := c.Param("id")
-		id, _ := strconv.Atoi(idn)
+		id := idToken
 		users, rows, err := uh.userService.GetUser(id)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("Failed to fetch data"))
 		}
 		if rows == 0 {
 			return c.JSON(http.StatusBadRequest, response.ResponseFailed("data not exist"))
-		}
-		if idToken != id {
-			return c.JSON(http.StatusBadRequest, response.ResponseFailed("Bad Request"))
 		}
 		return c.JSON(http.StatusOK, response.ResponseSuccess("success get data", users))
 	}
@@ -49,17 +44,13 @@ func (uh *UserHandler) DeleteUserHandler() echo.HandlerFunc {
 		if tokenerr != nil {
 			return c.JSON(http.StatusBadRequest, response.ResponseFailed("Bad Request"))
 		}
-		idn := c.Param("id")
-		id, _ := strconv.Atoi(idn)
+		id := idToken
 		_, rows, err := uh.userService.GetUser(id)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("Failed to fetch data"))
 		}
 		if rows == 0 {
 			return c.JSON(http.StatusBadRequest, response.ResponseFailed("Data not exist"))
-		}
-		if idToken != id {
-			return c.JSON(http.StatusBadRequest, response.ResponseFailed("Bad Request"))
 		}
 		_, err = uh.userService.DeleteUser(id)
 		if err != nil {
@@ -87,8 +78,7 @@ func (uh *UserHandler) UpdatedUserHandler() echo.HandlerFunc {
 		if tokenerr != nil {
 			return c.JSON(http.StatusBadRequest, response.ResponseFailed("Bad Request"))
 		}
-		idn := c.Param("id")
-		id, _ := strconv.Atoi(idn)
+		id := idToken
 		users, rows, err := uh.userService.GetUser(id)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("Failed fetch data"))

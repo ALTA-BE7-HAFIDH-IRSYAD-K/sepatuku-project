@@ -38,8 +38,7 @@ func (pr *ProductRepository) GetProduct(id int) (_entities.Product, int, error) 
 	return product, int(tx.RowsAffected), nil
 }
 
-func (pr *ProductRepository) CreateProduct(idToken int, product _entities.Product) (_entities.Product, error) {
-	product.UserID = uint(idToken)
+func (pr *ProductRepository) CreateProduct(product _entities.Product) (_entities.Product, error) {
 	tx := pr.database.Save(&product)
 	if tx.Error != nil {
 		return product, tx.Error

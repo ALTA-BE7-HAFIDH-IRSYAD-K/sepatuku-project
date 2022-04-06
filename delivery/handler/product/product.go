@@ -90,7 +90,10 @@ func (ph *ProductHandler) CreateProductHandler() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, response.ResponseFailed("Bad Request"))
 		}
 		c.Bind(&product)
-		product, err := ph.productService.CreateProduct(idToken, product)
+		if idToken != int(product.UserID) {
+			return c.JSON(http.StatusBadRequest, response.ResponseFailed("Bad Request"))
+		}
+		product, err := ph.productService.CreateProduct(product)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("Failed create data"))
 		}

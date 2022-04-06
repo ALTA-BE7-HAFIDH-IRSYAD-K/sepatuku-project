@@ -29,8 +29,8 @@ func (ps *ProductService) DeleteProduct(id int) (_entities.Product, error) {
 	product, err := ps.productRepository.DeleteProduct(id)
 	return product, err
 }
-func (ps *ProductService) CreateProduct(idToken int, product _entities.Product) (_entities.Product, error) {
-	product, err := ps.productRepository.CreateProduct(idToken, product)
+func (ps *ProductService) CreateProduct(product _entities.Product) (_entities.Product, error) {
+	product, err := ps.productRepository.CreateProduct(product)
 	return product, err
 }
 func (ps *ProductService) UpdateProduct(product _entities.Product, id int) (_entities.Product, error) {

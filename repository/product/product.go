@@ -1,1 +1,75 @@
 package product
+
+import (
+	_entities "sepatuku-project/entity/product"
+
+	"gorm.io/gorm"
+)
+
+type ProductRepository struct {
+	database *gorm.DB
+}
+
+func NewProductRepository(db *gorm.DB) *ProductRepository {
+	return &ProductRepository{
+		database: db,
+	}
+}
+
+func (pr *ProductRepository) GetAllProduct() ([]_entities.Product, error) {
+	var product []_entities.Product
+	tx := pr.database.Find(&product)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	return product, nil
+}
+
+func (pr *ProductRepository) GetProduct(id int) (_entities.Product, int, error) {
+	var product _entities.Product
+	tx := pr.database.Find(&product, id)
+
+	if tx.Error != nil {
+		return product, 0, tx.Error
+	}
+	if tx.RowsAffected == 0 {
+		return product, 0, tx.Error
+	}
+	return product, int(tx.RowsAffected), nil
+}
+
+func (pr *ProductRepository) CreateProduct(idToken int, product _entities.Product) (_entities.Product, error) {
+	product.UserID = uint(idToken)
+	tx := pr.database.Save(&product)
+	if tx.Error != nil {
+		return product, tx.Error
+	}
+	if tx.RowsAffected == 0 {
+		return product, tx.Error
+	}
+	return product, nil
+}
+
+func (pr *ProductRepository) UpdateProduct(product _entities.Product) (_entities.Product, error) {
+	tx := pr.database.Save(&product)
+	if tx.Error != nil {
+		return product, tx.Error
+	}
+	if tx.RowsAffected == 0 {
+		return product, tx.Error
+	}
+	return product, nil
+}
+
+func (pr *ProductRepository) DeleteProduct(id int) (_entities.Product, error) {
+	var product _entities.Product
+	tx := pr.database.Delete(&product, id)
+	if tx.Error != nil {
+		return product, tx.Error
+	}
+	if tx.RowsAffected == 0 {
+		return product, tx.Error
+
+	}
+	return product, nil
+}

@@ -3,6 +3,7 @@ package routes
 import (
 	"fmt"
 	_authHandler "sepatuku-project/delivery/handler/auth"
+	_productHandler "sepatuku-project/delivery/handler/product"
 	_userHandler "sepatuku-project/delivery/handler/user"
 	_middlewares "sepatuku-project/delivery/middleware"
 
@@ -27,6 +28,10 @@ func OrderPath() {
 	fmt.Println("order-path")
 }
 
-func ProductPath() {
-	fmt.Println("product-path")
+func ProductPath(e *echo.Echo, ph *_productHandler.ProductHandler) {
+	e.POST("/products", ph.CreateProductHandler(), _middlewares.JWTMiddleware())
+	e.GET("/products", ph.GetAllHandler(), _middlewares.JWTMiddleware())
+	e.GET("/products/:id", ph.GetProductHandler(), _middlewares.JWTMiddleware())
+	e.DELETE("/products/:id", ph.DeleteProductHandler(), _middlewares.JWTMiddleware())
+	e.PUT("/products/:id", ph.UpdateProductHandler(), _middlewares.JWTMiddleware())
 }

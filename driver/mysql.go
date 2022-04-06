@@ -3,6 +3,7 @@ package driver
 import (
 	"fmt"
 	"sepatuku-project/configs"
+	"sepatuku-project/entity/product"
 	"sepatuku-project/entity/user"
 
 	"github.com/labstack/gommon/log"
@@ -32,4 +33,5 @@ func InitDB(configs *configs.AppConfig) *gorm.DB {
 
 func InitialMigration(db *gorm.DB) {
 	db.AutoMigrate(&user.User{})
+	db.AutoMigrate(&product.Product{})
 }

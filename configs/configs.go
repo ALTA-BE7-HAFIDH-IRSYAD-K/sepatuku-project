@@ -35,7 +35,7 @@ func GetConfig() *AppConfig {
 func initConfig() *AppConfig {
 	var defaultConfig AppConfig
 	defaultConfig.Port = os.Getenv("APP_PORT")
-	defaultConfig.SecretJWT = os.Getenv("SECRET_JWT")
+	defaultConfig.SecretJWT = os.Getenv("JWT_SECRET")
 	defaultConfig.Database.Driver = os.Getenv("DB_DRIVER")
 	defaultConfig.Database.Name = os.Getenv("DB_NAME")
 	defaultConfig.Database.Address = os.Getenv("DB_ADDRESS")
@@ -43,19 +43,5 @@ func initConfig() *AppConfig {
 	defaultConfig.Database.Username = os.Getenv("DB_USERNAME")
 	defaultConfig.Database.Password = os.Getenv("DB_PASSWORD")
 
-	// viper.SetConfigType("yaml")
-	// viper.SetConfigName("config")
-	// viper.AddConfigPath("./configs/")
-	// if err := viper.ReadInConfig(); err != nil {
-	// 	log.Info("failed to open file")
-	// 	return &defaultConfig
-	// }
-
-	// var finalConfig AppConfig
-	// err := viper.Unmarshal(&finalConfig)
-	// if err != nil {
-	// 	log.Info("failed to extract external config, use default value")
-	// 	return &defaultConfig
-	// }
 	return &defaultConfig
 }

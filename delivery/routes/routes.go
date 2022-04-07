@@ -34,8 +34,8 @@ func OrderPath(e *echo.Echo, oh *_orderHandler.OrderHandler) {
 
 func ProductPath(e *echo.Echo, ph *_productHandler.ProductHandler) {
 	e.POST("/api/v1/products", ph.CreateProductHandler(), _middlewares.JWTMiddleware())
-	e.GET("/api/v1/products", ph.GetAllHandler(), _middlewares.JWTMiddleware())
-	e.GET("/api/v1/products/:id", ph.GetProductHandler(), _middlewares.JWTMiddleware())
+	e.GET("/api/v1/products", ph.GetAllHandler())
+	e.GET("/api/v1/products/:id", ph.GetProductHandler())
 	e.DELETE("/api/v1/products/:id", ph.DeleteProductHandler(), _middlewares.JWTMiddleware())
 	e.PUT("/api/v1/products/:id", ph.UpdateProductHandler(), _middlewares.JWTMiddleware())
 }

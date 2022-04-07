@@ -19,7 +19,7 @@ jobs:
           script: |
             cd /home/ubuntu/sepatuku-project
             git pull origin main
-            docker stop sepatuku-container
-            docker rm sepatuku-container
-            docker build -t sepatuku-api:latest .
-            docker run -d -p 8080:8080 -e APP_PORT="8080" -e DB_PORT="3306" -e DB_DRIVER="mysql" -e DB_NAME="sepatukuprod" -e DB_ADDRESS="${{ secrets.DBHOST }}" -e DB_USERNAME="${{ secrets.DBUSERNAME }}" -e DB_PASSWORD="${{ secrets.DBPASSWORD }}" --name sepatuku-container sepatuku-api:latest
+            docker stop sepatuku
+            docker rm sepatuku
+            docker build -t sepatuku:latest .
+            docker run -d -p 8080:8080 -e APP_PORT="8080" -e DB_PORT="3306" -e DB_DRIVER="mysql" -e DB_NAME="altagormdb" -e DB_ADDRESS="${{ secrets.DBHOST }}" -e DB_USERNAME="${{ secrets.DBUSERNAME }}" -e DB_PASSWORD="${{ secrets.DBPASSWORD }}" --name sepatuku-cont sepatuku:latest:latest

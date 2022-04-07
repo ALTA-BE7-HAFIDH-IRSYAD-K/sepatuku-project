@@ -3,6 +3,7 @@ package auth
 import (
 	"errors"
 	_middlewares "sepatuku-project/delivery/middleware"
+	"sepatuku-project/delivery/response"
 	_entities "sepatuku-project/entity/user"
 
 	"gorm.io/gorm"
@@ -27,7 +28,7 @@ func (ar *AuthRepository) Login(identifier string, password string) (string, err
 	if tx.RowsAffected == 0 {
 		return "user not found", errors.New("user not found")
 	}
-	if user.Password != password {
+	if response.CheckPasswordHash(password, user.Password) != true {
 		return "password incorrect", errors.New("password incorrect")
 	}
 	token, err := _middlewares.CreateToken(int(user.ID), user.Username)

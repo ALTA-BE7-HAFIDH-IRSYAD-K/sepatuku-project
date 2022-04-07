@@ -2,6 +2,7 @@ package user
 
 import (
 	"sepatuku-project/delivery/response"
+	_entitiesproduct "sepatuku-project/entity/product"
 	_entities "sepatuku-project/entity/user"
 	_userRepository "sepatuku-project/repository/user"
 )
@@ -16,9 +17,9 @@ func NewUserService(userRepo _userRepository.UserRepositoryInterface) UserServic
 	}
 }
 
-func (uuc *UserService) GetUser(id int) (_entities.User, int, error) {
-	user, rows, err := uuc.userRepository.GetUser(id)
-	return user, rows, err
+func (uuc *UserService) GetUser(id int) (_entities.User, []_entitiesproduct.Product, int, error) {
+	user, product, rows, err := uuc.userRepository.GetUser(id)
+	return user, product, rows, err
 }
 
 func (uuc *UserService) DeleteUser(id int) (_entities.User, error) {

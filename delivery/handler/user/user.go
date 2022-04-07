@@ -27,14 +27,14 @@ func (uh *UserHandler) GetUserHandler() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, response.ResponseFailed("Bad Request"))
 		}
 		id := idToken
-		user, rows, err := uh.userService.GetUser(id)
+		user, product, rows, err := uh.userService.GetUser(id)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("Failed to fetch data"))
 		}
 		if rows == 0 {
 			return c.JSON(http.StatusBadRequest, response.ResponseFailed("data not exist"))
 		}
-		return c.JSON(http.StatusOK, response.ResponseSuccess("success get data", user))
+		return c.JSON(http.StatusOK, response.Responseuser("success get data", user, product))
 	}
 }
 
@@ -45,7 +45,7 @@ func (uh *UserHandler) DeleteUserHandler() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, response.ResponseFailed("Bad Request"))
 		}
 		id := idToken
-		_, rows, err := uh.userService.GetUser(id)
+		_, _, rows, err := uh.userService.GetUser(id)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("Failed to fetch data"))
 		}
@@ -79,7 +79,7 @@ func (uh *UserHandler) UpdatedUserHandler() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, response.ResponseFailed("Bad Request"))
 		}
 		id := idToken
-		user, rows, err := uh.userService.GetUser(id)
+		user, _, rows, err := uh.userService.GetUser(id)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("Failed fetch data"))
 		}

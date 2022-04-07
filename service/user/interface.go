@@ -1,9 +1,12 @@
 package user
 
-import _entities "sepatuku-project/entity/user"
+import (
+	_entitiesproduct "sepatuku-project/entity/product"
+	_entities "sepatuku-project/entity/user"
+)
 
 type UserServiceInterface interface {
-	GetUser(id int) (_entities.User, int, error)
+	GetUser(id int) (_entities.User, []_entitiesproduct.Product, int, error)
 	DeleteUser(id int) (_entities.User, error)
 	CreateUser(user _entities.User) (_entities.User, error)
 	UpdatedUser(user _entities.User, id int) (_entities.User, error)

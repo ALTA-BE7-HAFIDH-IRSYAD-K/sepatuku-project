@@ -9,7 +9,7 @@ type CartService struct {
 	cartService _cart.CartInterfaceRepository
 }
 
-func NewProductService(cartRepo _cart.CartInterfaceRepository) CartInterfaceService {
+func NewCartService(cartRepo _cart.CartInterfaceRepository) CartInterfaceService {
 	return &CartService{
 		cartService: cartRepo,
 	}

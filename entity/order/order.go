@@ -47,10 +47,10 @@ type FormatOrderRequest struct {
 
 type HistoryOrder struct {
 	*gorm.Model
-	UserId  uint        `json:"user_id" form:"user_id"`
-	CartId  uint        `json:"cart_id" form:"cart_id"`
-	OrderId uint        `json:"order_id" form:"order_id"`
-	Order   []Order     `json:"order" form:"order" gorm:"foreignKey:OrderId;references:ID"`
-	Cart    []cart.Cart `json:"cart" form:"cart" gorm:"foreignKey:CartId;references:ID"`
-	Status  string      `json:"status" form:"status"`
+	UserId  uint      `json:"user_id" form:"user_id"`
+	CartId  uint      `json:"cart_id" form:"cart_id"`
+	OrderId uint      `json:"order_id" form:"order_id"`
+	Order   Order     `json:"order" form:"order" gorm:"foreignKey:OrderId;references:ID"`
+	Cart    cart.Cart `json:"cart" form:"cart" gorm:"foreignKey:CartId;references:ID"`
+	Status  string    `json:"status" form:"status"`
 }

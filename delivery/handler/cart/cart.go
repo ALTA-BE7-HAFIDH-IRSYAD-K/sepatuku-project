@@ -15,7 +15,7 @@ type CartHandler struct {
 	cartService cart.CartInterfaceService
 }
 
-func NewProductHandler(cartService cart.CartInterfaceService) *CartHandler {
+func NewCartHandler(cartService cart.CartInterfaceService) *CartHandler {
 	return &CartHandler{cartService}
 }
 

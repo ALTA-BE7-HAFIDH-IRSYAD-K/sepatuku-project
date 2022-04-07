@@ -28,16 +28,16 @@ func (uuc *UserService) DeleteUser(id int) (_entities.User, error) {
 }
 
 func (uuc *UserService) CreateUser(user _entities.User) (_entities.User, error) {
-	user, err := uuc.userRepository.CreateUser(user)
 	password, err := response.HashPassword(user.Password)
 	user.Password = password
+	user, err = uuc.userRepository.CreateUser(user)
 	return user, err
 }
 
 func (uuc *UserService) UpdatedUser(user _entities.User, id int) (_entities.User, error) {
 	user.ID = uint(id)
-	user, err := uuc.userRepository.UpdatedUser(user)
 	password, err := response.HashPassword(user.Password)
 	user.Password = password
+	user, err = uuc.userRepository.UpdatedUser(user)
 	return user, err
 }

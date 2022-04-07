@@ -10,6 +10,15 @@ func ResponseSuccess(message string, data interface{}) map[string]interface{} {
 	}
 }
 
+func Responseuser(message string, data interface{}, product interface{}) map[string]interface{} {
+	return map[string]interface{}{
+		"status":       "success",
+		"message":      message,
+		"data_user":    data,
+		"data_product": product,
+	}
+}
+
 func ResponseSuccessWithoutData(message string) map[string]interface{} {
 	return map[string]interface{}{
 		"status":  "success",

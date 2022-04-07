@@ -1,6 +1,7 @@
 package user
 
 import (
+	_entitiesproduct "sepatuku-project/entity/product"
 	_entities "sepatuku-project/entity/user"
 
 	"gorm.io/gorm"
@@ -16,16 +17,22 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 	}
 }
 
-func (ur *UserRepository) GetUser(id int) (_entities.User, int, error) {
-	var user _entities.User
-	tx := ur.database.Find(&user, id)
+func (ur *UserRepository) GetUser(id int) (_entities.User, []_entitiesproduct.Product, int, error) {
+	var users _entities.User
+	var product []_entitiesproduct.Product
+	type produk interface{}
+	tx := ur.database.Find(&users, id)
 	if tx.Error != nil {
-		return user, 0, tx.Error
+		return users, product, 0, tx.Error
 	}
 	if tx.RowsAffected == 0 {
-		return user, 0, tx.Error
+		return users, product, 0, tx.Error
 	}
-	return user, int(tx.RowsAffected), nil
+	err := ur.database.Where("user_id", id).Find(&product)
+	if tx.Error != nil {
+		return users, product, 0, err.Error
+	}
+	return users, product, int(tx.RowsAffected), nil
 }
 
 func (ur *UserRepository) DeleteUser(id int) (_entities.User, error) {

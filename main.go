@@ -38,6 +38,7 @@ func main() {
 	e := echo.New()
 	e.Pre(middleware.RemoveTrailingSlash())
 	e.Use(_middlewares.CustomLogger())
+	e.Use(_middlewares.CustomCors())
 	_routes.UserPath(e, userHandler)
 	_routes.ProductPath(e, productHandler)
 	_routes.RegisterAuthPath(e, authHandler)

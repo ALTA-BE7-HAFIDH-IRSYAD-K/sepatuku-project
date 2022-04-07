@@ -1,8 +1,9 @@
 package routes
 
 import (
-	"fmt"
 	_authHandler "sepatuku-project/delivery/handler/auth"
+	_cartHandler "sepatuku-project/delivery/handler/cart"
+	_orderHandler "sepatuku-project/delivery/handler/order"
 	_productHandler "sepatuku-project/delivery/handler/product"
 	_userHandler "sepatuku-project/delivery/handler/user"
 	_middlewares "sepatuku-project/delivery/middleware"
@@ -11,27 +12,30 @@ import (
 )
 
 func RegisterAuthPath(e *echo.Echo, ah *_authHandler.AuthHandler) {
-	e.POST("/auth", ah.LoginHandler())
+	e.POST("/api/v1/auth", ah.LoginHandler())
 }
 func UserPath(e *echo.Echo, uh *_userHandler.UserHandler) {
-	e.POST("/users", uh.CreateUserHandler())
-	e.GET("/users", uh.GetUserHandler(), _middlewares.JWTMiddleware())
-	e.DELETE("/users", uh.DeleteUserHandler(), _middlewares.JWTMiddleware())
-	e.PUT("/users", uh.UpdatedUserHandler(), _middlewares.JWTMiddleware())
+	e.POST("/api/v1/users", uh.CreateUserHandler())
+	e.GET("/api/v1/users", uh.GetUserHandler(), _middlewares.JWTMiddleware())
+	e.DELETE("/api/v1/users", uh.DeleteUserHandler(), _middlewares.JWTMiddleware())
+	e.PUT("/api/v1/users", uh.UpdatedUserHandler(), _middlewares.JWTMiddleware())
 }
 
-func CartPath() {
-	fmt.Println("cart-path")
+func CartPath(e *echo.Echo, ch *_cartHandler.CartHandler) {
+	e.POST("/api/v1/carts", ch.CreateCartHandler(), _middlewares.JWTMiddleware())
+	e.GET("/api/v1/carts", ch.GetAllCartHandler(), _middlewares.JWTMiddleware())
+	e.DELETE("/api/v1/carts/:id", ch.DeleteCartHandler(), _middlewares.JWTMiddleware())
 }
 
-func OrderPath() {
-	fmt.Println("order-path")
+func OrderPath(e *echo.Echo, oh *_orderHandler.OrderHandler) {
+	e.POST("/api/v1/order/", oh.CreateOrderProduct())
+	e.GET("/api/v1/order/history", oh.GetAllHistoryOrderProduct())
 }
 
 func ProductPath(e *echo.Echo, ph *_productHandler.ProductHandler) {
-	e.POST("/products", ph.CreateProductHandler(), _middlewares.JWTMiddleware())
-	e.GET("/products", ph.GetAllHandler(), _middlewares.JWTMiddleware())
-	e.GET("/products/:id", ph.GetProductHandler(), _middlewares.JWTMiddleware())
-	e.DELETE("/products/:id", ph.DeleteProductHandler(), _middlewares.JWTMiddleware())
-	e.PUT("/products/:id", ph.UpdateProductHandler(), _middlewares.JWTMiddleware())
+	e.POST("/api/v1/products", ph.CreateProductHandler(), _middlewares.JWTMiddleware())
+	e.GET("/api/v1/products", ph.GetAllHandler(), _middlewares.JWTMiddleware())
+	e.GET("/api/v1/products/:id", ph.GetProductHandler(), _middlewares.JWTMiddleware())
+	e.DELETE("/api/v1/products/:id", ph.DeleteProductHandler(), _middlewares.JWTMiddleware())
+	e.PUT("/api/v1/products/:id", ph.UpdateProductHandler(), _middlewares.JWTMiddleware())
 }

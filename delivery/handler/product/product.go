@@ -36,10 +36,6 @@ func (ph *ProductHandler) GetAllHandler() echo.HandlerFunc {
 
 func (ph *ProductHandler) GetProductHandler() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		idToken, tokenerr := _middlewares.ReadTokenId(c)
-		if tokenerr != nil {
-			return c.JSON(http.StatusBadRequest, response.ResponseFailed("Bad Request"))
-		}
 		idn := c.Param("id")
 		id, _ := strconv.Atoi(idn)
 		product, rows, err := ph.productService.GetProduct(id)
@@ -47,9 +43,6 @@ func (ph *ProductHandler) GetProductHandler() echo.HandlerFunc {
 			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("Failed to fetch data"))
 		}
 		if rows == 0 {
-			return c.JSON(http.StatusBadRequest, response.ResponseFailed("data not exist"))
-		}
-		if product.UserID != uint(idToken) {
 			return c.JSON(http.StatusBadRequest, response.ResponseFailed("data not exist"))
 		}
 		return c.JSON(http.StatusOK, response.ResponseSuccess("success get data", product))

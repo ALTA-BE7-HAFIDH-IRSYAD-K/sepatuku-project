@@ -3,6 +3,8 @@ package driver
 import (
 	"fmt"
 	"sepatuku-project/configs"
+	"sepatuku-project/entity/cart"
+	"sepatuku-project/entity/order"
 	"sepatuku-project/entity/product"
 	"sepatuku-project/entity/user"
 
@@ -34,4 +36,7 @@ func InitDB(configs *configs.AppConfig) *gorm.DB {
 func InitialMigration(db *gorm.DB) {
 	db.AutoMigrate(&user.User{})
 	db.AutoMigrate(&product.Product{})
+	db.AutoMigrate(&cart.Cart{})
+	db.AutoMigrate(&order.Order{})
+	db.AutoMigrate(&order.HistoryOrder{})
 }

@@ -1,9 +1,9 @@
 Port: 8080
 JWT_SECRET: "S3CR3T"
 Database:
-  Port: 3306
+  Port: 3307
   Driver: "mysql"
-  Name: "db-name"
-  Address: "127.0.0.1"
-  Username: "username"
-  Password: "password"  
+  Name: "sepatuku"
+  Address: "localhost"
+  Username: "root"
+  Password: "Khairuddin"

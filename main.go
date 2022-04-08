@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"net/http"
 	"sepatuku-project/configs"
 	_authHandler "sepatuku-project/delivery/handler/auth"
 	"sepatuku-project/delivery/handler/cart"
@@ -54,7 +55,11 @@ func main() {
 	e := echo.New()
 	e.Pre(middleware.RemoveTrailingSlash())
 	e.Use(_middlewares.CustomLogger())
-	e.Use(_middlewares.CustomCors())
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+		AllowMethods: []string{http.MethodGet, http.MethodHead, http.MethodPut, http.MethodPatch, http.MethodPost, http.MethodDelete},
+	}))
 
 	_routes.UserPath(e, userHandler)
 	_routes.ProductPath(e, productHandler)

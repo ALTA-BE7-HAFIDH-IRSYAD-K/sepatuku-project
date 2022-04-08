@@ -2,18 +2,10 @@ openapi: '3.0.2'
 info:
   title:  Sepatuku API
   description: Group 3 Project
-  termsOfService: http://example.com/terms/
-  contact:
-    name: API Support
-    url: http://www.example.com/support
-    email: support@example.com
-  license:
-    name: Apache 2.0
-    url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: '1.0.0'
 servers:
-  - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/iffakhry/nasrul-api/1.0.0
+  - description: Sepatuku-api
+    url: https://52.87.250.27:8080/api/v1
     variables:
       environment: 
         default: dev

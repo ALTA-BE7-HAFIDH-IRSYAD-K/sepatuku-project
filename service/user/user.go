@@ -5,6 +5,8 @@ import (
 	_entitiesproduct "sepatuku-project/entity/product"
 	_entities "sepatuku-project/entity/user"
 	_userRepository "sepatuku-project/repository/user"
+
+	"github.com/jinzhu/copier"
 )
 
 type UserService struct {
@@ -20,6 +22,12 @@ func NewUserService(userRepo _userRepository.UserRepositoryInterface) UserServic
 func (uuc *UserService) GetUser(id int) (_entities.User, []_entitiesproduct.Product, int, error) {
 	user, product, rows, err := uuc.userRepository.GetUser(id)
 	return user, product, rows, err
+}
+func (uuc *UserService) GetProfile(id int) (_entities.UserRespon, []_entitiesproduct.Product, int, error) {
+	user, product, rows, err := uuc.userRepository.GetUser(id)
+	userRes := _entities.UserRespon{}
+	copier.Copy(&userRes, &user)
+	return userRes, product, rows, err
 }
 
 func (uuc *UserService) DeleteUser(id int) (_entities.User, error) {

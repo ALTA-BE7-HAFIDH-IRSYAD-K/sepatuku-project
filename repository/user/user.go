@@ -66,7 +66,7 @@ func (ur *UserRepository) CreateUser(user _entities.User) (_entities.User, int, 
 		return user, 0, tx.Error
 	}
 	if tx.RowsAffected == 0 {
-		return user, 0, tx.Error
+		return user, 2, tx.Error
 	}
 	return user, int(tx.RowsAffected), nil
 }

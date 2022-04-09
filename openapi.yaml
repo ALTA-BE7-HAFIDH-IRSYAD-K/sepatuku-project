@@ -360,7 +360,7 @@ components:
           example: sepatu ini bisa bikin tua
         "price":
           type: integer
-          minLength: 100000
+          example: 100000
         "images":
           type: string
           example: images
@@ -815,4 +815,4 @@ components:
                 example: failed
               message:
                 type: string
-                example: failed get product
+                example: product not exist

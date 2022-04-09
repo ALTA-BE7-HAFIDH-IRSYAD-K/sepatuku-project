@@ -68,7 +68,7 @@ func (uh *UserHandler) CreateUserHandler() echo.HandlerFunc {
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("register failed"))
 		}
-		if row == 0 {
+		if row == 2 {
 			return c.JSON(http.StatusBadRequest, response.ResponseFailed("username/email already exist"))
 
 		}

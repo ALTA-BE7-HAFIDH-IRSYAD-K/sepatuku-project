@@ -25,10 +25,10 @@ func (ph *ProductHandler) GetAllHandler() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		product, err := ph.productService.GetAllProduct()
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("failed fetch data"))
+			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("failed get all product"))
 		}
 		if len(product) == 0 {
-			return c.JSON(http.StatusBadRequest, response.ResponseFailed("data not exist"))
+			return c.JSON(http.StatusBadRequest, response.ResponseFailed("product not exist"))
 		}
 		return c.JSON(http.StatusOK, response.ResponseSuccess("success get all product", product))
 	}
@@ -40,10 +40,10 @@ func (ph *ProductHandler) GetProductHandler() echo.HandlerFunc {
 		id, _ := strconv.Atoi(idn)
 		product, rows, err := ph.productService.GetProduct(id)
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("failed to fetch data"))
+			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("failed get product"))
 		}
 		if rows == 0 {
-			return c.JSON(http.StatusBadRequest, response.ResponseFailed("data not exist"))
+			return c.JSON(http.StatusBadRequest, response.ResponseFailed("product not exist"))
 		}
 		return c.JSON(http.StatusOK, response.ResponseSuccess("success get product", product))
 	}
@@ -59,19 +59,19 @@ func (ph *ProductHandler) DeleteProductHandler() echo.HandlerFunc {
 		id, _ := strconv.Atoi(idn)
 		product, rows, err := ph.productService.GetProduct(id)
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("failed to fetch data"))
+			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("failed get product"))
 		}
 		if rows == 0 {
-			return c.JSON(http.StatusBadRequest, response.ResponseFailed("data not exist"))
+			return c.JSON(http.StatusBadRequest, response.ResponseFailed("product not exist"))
 		}
 		if idToken != int(product.UserID) {
-			return c.JSON(http.StatusBadRequest, response.ResponseFailed("data not exist"))
+			return c.JSON(http.StatusBadRequest, response.ResponseFailed("product not exist"))
 		}
 		_, err = ph.productService.DeleteProduct(id)
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("failed delete data"))
+			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("failed delete product"))
 		}
-		return c.JSON(http.StatusOK, response.ResponseSuccessWithoutData("success delete data"))
+		return c.JSON(http.StatusOK, response.ResponseSuccessWithoutData("success delete product"))
 	}
 }
 
@@ -84,11 +84,19 @@ func (ph *ProductHandler) CreateProductHandler() echo.HandlerFunc {
 		}
 		c.Bind(&product)
 		product.UserID = uint(idToken)
-		product, err := ph.productService.CreateProduct(product)
+		product, row, err := ph.productService.CreateProduct(product)
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("failed create data"))
+			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("failed create product"))
 		}
-		return c.JSON(http.StatusOK, response.ResponseSuccess("success create data", product))
+		if row == 0 {
+			return c.JSON(http.StatusBadRequest, response.ResponseFailed("please complete data filling"))
+
+		}
+		if row == 2 {
+			return c.JSON(http.StatusBadRequest, response.ResponseFailed("failed create product"))
+
+		}
+		return c.JSON(http.StatusOK, response.ResponseSuccess("success create product", product))
 	}
 }
 
@@ -102,13 +110,13 @@ func (ph *ProductHandler) UpdateProductHandler() echo.HandlerFunc {
 		id, _ := strconv.Atoi(idn)
 		product, rows, err := ph.productService.GetProduct(id)
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("Failed fetch data"))
+			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("failed get product"))
 		}
 		if rows == 0 {
-			return c.JSON(http.StatusBadRequest, response.ResponseFailed("data not exist"))
+			return c.JSON(http.StatusBadRequest, response.ResponseFailed("product not exist"))
 		}
 		if idToken != int(product.UserID) {
-			return c.JSON(http.StatusBadRequest, response.ResponseFailed("data not exist"))
+			return c.JSON(http.StatusBadRequest, response.ResponseFailed("product not exist"))
 		}
 		c.Bind(&product)
 		product, err = ph.productService.UpdateProduct(product, id)

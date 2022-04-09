@@ -15,6 +15,7 @@ type User struct {
 	Password string             `json:"password" form:"password"`
 	Address  string             `json:"address" form:"password"`
 	Phone    string             `json:"phone" form:"phone"`
+	Avatar   string             `json:"avatar" form:"avatar"`
 	Cart     []cart.Cart        `gorm:"foreignKey:UserId;references:ID" json:"cart" form:"cart"`
 	Product  []_prodcut.Product `gorm:"foreignKey:UserID;references:ID"`
 }
@@ -25,6 +26,7 @@ type UserRespon struct {
 	Email     string    `json:"email"`
 	Address   string    `json:"address"`
 	Phone     string    `json:"phone"`
+	Avatar    string    `json:"avatar"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }

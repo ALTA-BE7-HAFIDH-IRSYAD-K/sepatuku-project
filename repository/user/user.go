@@ -1,6 +1,7 @@
 package user
 
 import (
+	"fmt"
 	_entitiesproduct "sepatuku-project/entity/product"
 	_entities "sepatuku-project/entity/user"
 
@@ -47,16 +48,27 @@ func (ur *UserRepository) DeleteUser(id int) (_entities.User, error) {
 	}
 	return user, nil
 }
-func (ur *UserRepository) CreateUser(user _entities.User) (_entities.User, error) {
+func (ur *UserRepository) CreateUser(user _entities.User) (_entities.User, int, error) {
+	if user.Username == "" {
+		return user, 0, fmt.Errorf("insert your username")
+	}
+	if user.Email == "" {
+		return user, 0, fmt.Errorf("insert your email")
+	}
+	if user.Password == "" {
+		return user, 0, fmt.Errorf("insert your password")
+	}
+	if user.Phone == "" {
+		return user, 0, fmt.Errorf("insert your phone number")
+	}
 	tx := ur.database.Save(&user)
 	if tx.Error != nil {
-		return user, tx.Error
+		return user, 0, tx.Error
 	}
 	if tx.RowsAffected == 0 {
-		return user, tx.Error
-
+		return user, 0, tx.Error
 	}
-	return user, nil
+	return user, int(tx.RowsAffected), nil
 }
 func (ur *UserRepository) UpdatedUser(user _entities.User) (_entities.User, error) {
 	tx := ur.database.Save(&user)

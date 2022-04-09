@@ -64,9 +64,13 @@ func (uh *UserHandler) CreateUserHandler() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var user _entities.User
 		c.Bind(&user)
-		userRes, err := uh.userService.CreateUser(user)
+		userRes, row, err := uh.userService.CreateUser(user)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("register failed"))
+		}
+		if row == 0 {
+			return c.JSON(http.StatusBadRequest, response.ResponseFailed("username/email already exist"))
+
 		}
 		return c.JSON(http.StatusOK, response.ResponseSuccess("register successfully", userRes))
 	}

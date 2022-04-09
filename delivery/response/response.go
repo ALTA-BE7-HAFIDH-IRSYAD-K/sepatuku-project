@@ -10,7 +10,7 @@ func ResponseSuccess(message string, data interface{}) map[string]interface{} {
 	}
 }
 
-func Responseuser(message string, data interface{}, product interface{}) map[string]interface{} {
+func ResponseUser(message string, data interface{}, product interface{}) map[string]interface{} {
 	return map[string]interface{}{
 		"status":       "success",
 		"message":      message,

@@ -28,9 +28,9 @@ func (ph *ProductHandler) GetAllHandler() echo.HandlerFunc {
 			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("failed fetch data"))
 		}
 		if len(product) == 0 {
-			return c.JSON(http.StatusBadRequest, response.ResponseFailed("Data not exist"))
+			return c.JSON(http.StatusBadRequest, response.ResponseFailed("data not exist"))
 		}
-		return c.JSON(http.StatusOK, response.ResponseSuccess("success get all data", product))
+		return c.JSON(http.StatusOK, response.ResponseSuccess("success get all product", product))
 	}
 }
 
@@ -40,12 +40,12 @@ func (ph *ProductHandler) GetProductHandler() echo.HandlerFunc {
 		id, _ := strconv.Atoi(idn)
 		product, rows, err := ph.productService.GetProduct(id)
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("Failed to fetch data"))
+			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("failed to fetch data"))
 		}
 		if rows == 0 {
 			return c.JSON(http.StatusBadRequest, response.ResponseFailed("data not exist"))
 		}
-		return c.JSON(http.StatusOK, response.ResponseSuccess("success get data", product))
+		return c.JSON(http.StatusOK, response.ResponseSuccess("success get product", product))
 	}
 }
 
@@ -53,25 +53,25 @@ func (ph *ProductHandler) DeleteProductHandler() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		idToken, tokenerr := _middlewares.ReadTokenId(c)
 		if tokenerr != nil {
-			return c.JSON(http.StatusBadRequest, response.ResponseFailed("Bad Request"))
+			return c.JSON(http.StatusBadRequest, response.ResponseFailed("bad request"))
 		}
 		idn := c.Param("id")
 		id, _ := strconv.Atoi(idn)
 		product, rows, err := ph.productService.GetProduct(id)
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("Failed to fetch data"))
+			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("failed to fetch data"))
 		}
 		if rows == 0 {
-			return c.JSON(http.StatusBadRequest, response.ResponseFailed("Data not exist"))
+			return c.JSON(http.StatusBadRequest, response.ResponseFailed("data not exist"))
 		}
 		if idToken != int(product.UserID) {
-			return c.JSON(http.StatusBadRequest, response.ResponseFailed("Data not exist"))
+			return c.JSON(http.StatusBadRequest, response.ResponseFailed("data not exist"))
 		}
 		_, err = ph.productService.DeleteProduct(id)
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("Failed delete data"))
+			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("failed delete data"))
 		}
-		return c.JSON(http.StatusOK, response.ResponseSuccessWithoutData("Succes delete data"))
+		return c.JSON(http.StatusOK, response.ResponseSuccessWithoutData("success delete data"))
 	}
 }
 
@@ -80,15 +80,15 @@ func (ph *ProductHandler) CreateProductHandler() echo.HandlerFunc {
 		var product _entities.Product
 		idToken, tokenerr := _middlewares.ReadTokenId(c)
 		if tokenerr != nil {
-			return c.JSON(http.StatusBadRequest, response.ResponseFailed("Bad Request"))
+			return c.JSON(http.StatusBadRequest, response.ResponseFailed("bad request"))
 		}
 		c.Bind(&product)
 		product.UserID = uint(idToken)
 		product, err := ph.productService.CreateProduct(product)
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("Failed create data"))
+			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("failed create data"))
 		}
-		return c.JSON(http.StatusOK, response.ResponseSuccess("Succes create data", product))
+		return c.JSON(http.StatusOK, response.ResponseSuccess("success create data", product))
 	}
 }
 
@@ -96,7 +96,7 @@ func (ph *ProductHandler) UpdateProductHandler() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		idToken, tokenerr := _middlewares.ReadTokenId(c)
 		if tokenerr != nil {
-			return c.JSON(http.StatusBadRequest, response.ResponseFailed("Bad Request"))
+			return c.JSON(http.StatusBadRequest, response.ResponseFailed("bad request"))
 		}
 		idn := c.Param("id")
 		id, _ := strconv.Atoi(idn)
@@ -105,16 +105,16 @@ func (ph *ProductHandler) UpdateProductHandler() echo.HandlerFunc {
 			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("Failed fetch data"))
 		}
 		if rows == 0 {
-			return c.JSON(http.StatusBadRequest, response.ResponseFailed("Data not exist"))
+			return c.JSON(http.StatusBadRequest, response.ResponseFailed("data not exist"))
 		}
 		if idToken != int(product.UserID) {
-			return c.JSON(http.StatusBadRequest, response.ResponseFailed("Data not exist"))
+			return c.JSON(http.StatusBadRequest, response.ResponseFailed("data not exist"))
 		}
 		c.Bind(&product)
 		product, err = ph.productService.UpdateProduct(product, id)
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("Failed edit data"))
+			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("failed edit product"))
 		}
-		return c.JSON(http.StatusOK, response.ResponseSuccess("Success edit data", product))
+		return c.JSON(http.StatusOK, response.ResponseSuccess("success edit product", product))
 	}
 }

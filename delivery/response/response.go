@@ -33,9 +33,9 @@ func ResponseFailed(message string) map[string]interface{} {
 	}
 }
 
-func HashPassword(password string) (string, error) {
+func HashPassword(password string) (string, int, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.MinCost)
-	return string(bytes), err
+	return string(bytes), 0, err
 }
 
 func CheckPasswordHash(password, hash string) bool {

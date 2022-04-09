@@ -9,6 +9,6 @@ type UserServiceInterface interface {
 	GetUser(id int) (_entities.User, []_entitiesproduct.Product, int, error)
 	GetProfile(id int) (_entities.UserRespon, []_entitiesproduct.Product, int, error)
 	DeleteUser(id int) (_entities.User, error)
-	CreateUser(user _entities.User) (_entities.UserRespon, error)
+	CreateUser(user _entities.User) (_entities.UserRespon, int, error)
 	UpdatedUser(user _entities.User, id int) (_entities.UserRespon, error)
 }

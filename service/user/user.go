@@ -35,18 +35,18 @@ func (uuc *UserService) DeleteUser(id int) (_entities.User, error) {
 	return user, err
 }
 
-func (uuc *UserService) CreateUser(user _entities.User) (_entities.UserRespon, error) {
-	password, err := response.HashPassword(user.Password)
+func (uuc *UserService) CreateUser(user _entities.User) (_entities.UserRespon, int, error) {
+	password, row, err := response.HashPassword(user.Password)
 	user.Password = password
-	user, err = uuc.userRepository.CreateUser(user)
+	user, row, err = uuc.userRepository.CreateUser(user)
 	userRes := _entities.UserRespon{}
 	copier.Copy(&userRes, &user)
-	return userRes, err
+	return userRes, row, err
 }
 
 func (uuc *UserService) UpdatedUser(user _entities.User, id int) (_entities.UserRespon, error) {
 	user.ID = uint(id)
-	password, err := response.HashPassword(user.Password)
+	password, _, err := response.HashPassword(user.Password)
 	user.Password = password
 	user, err = uuc.userRepository.UpdatedUser(user)
 	userRes := _entities.UserRespon{}

@@ -23,7 +23,7 @@ type Order struct {
 	TotalQty     uint      `json:"total_qty" form:"total_qty"`
 	TotalPrice   uint      `json:"total_price" form:"total_price"`
 	Status       string    `json:"status" form:"status"`
-	Cart         cart.Cart `json:"cart" form:"cart" gorm:"foreignKey:CartId;references:ID"`
+	Cart         cart.Cart `gorm:"foreignKey:CartId;references:ID"`
 }
 
 type Address struct {
@@ -53,8 +53,8 @@ type HistoryOrder struct {
 	UserId  uint      `json:"user_id" form:"user_id"`
 	CartId  uint      `json:"cart_id" form:"cart_id"`
 	OrderId uint      `json:"order_id" form:"order_id"`
-	Order   Order     `json:"order" form:"order" gorm:"foreignKey:OrderId;references:ID"`
-	Cart    cart.Cart `json:"cart" form:"cart" gorm:"foreignKey:CartId;references:ID"`
+	Order   Order     `gorm:"foreignKey:OrderId;references:ID"`
+	Cart    cart.Cart `gorm:"foreignKey:CartId;references:ID"`
 	Status  string    `json:"status" form:"status"`
 }
 

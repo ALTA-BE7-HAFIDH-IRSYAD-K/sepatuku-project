@@ -7,6 +7,6 @@ import (
 type RepositoryOrderInterface interface {
 	CreateOrder(order order.Order) (order.Order, error)
 	GetOrderById(id int) (order.Order, int, error)
-	GetOrderHistory() ([]order.Order, error)
+	GetOrderHistory(id int) ([]order.Order, error)
 	UpdatedHistoryOrder(order order.Order) (order.Order, error)
 }

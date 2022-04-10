@@ -22,7 +22,13 @@ func NewOrderHandler(serviceOrder _order.ServiceOrderInterface) *OrderHandler {
 
 func (oh *OrderHandler) GetAllHistoryOrderProduct() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		orderHistory, err := oh.serviceOrder.GetOrderHistory()
+		idToken, errToken := _middlewares.ReadTokenId(c)
+
+		if errToken != nil {
+			return c.JSON(http.StatusBadRequest, response.ResponseFailed("token is not valid"))
+		}
+
+		orderHistory, err := oh.serviceOrder.GetOrderHistory(idToken)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("failed fetch data"))
 		}

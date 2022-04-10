@@ -63,7 +63,7 @@ func (cr *CartRepository) CreateCart(cart _entities.Cart) (_entities.CartRespons
 
 func (cr *CartRepository) DeleteCart(id int) (_entities.Cart, error) {
 	var cart _entities.Cart
-	tx := cr.database.Delete(id)
+	tx := cr.database.Delete(&cart, id)
 
 	if tx.Error != nil {
 		return cart, tx.Error

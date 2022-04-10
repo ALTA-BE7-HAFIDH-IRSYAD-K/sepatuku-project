@@ -40,7 +40,7 @@ func (ch *CartHandler) GetAllCartHandler() echo.HandlerFunc {
 func (ch *CartHandler) DeleteCartHandler() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		//var cartDelete _cart.Cart
-		_, errToken := _middlewares.ReadTokenId(c)
+		idToken, errToken := _middlewares.ReadTokenId(c)
 
 		if errToken != nil {
 			return c.JSON(http.StatusBadRequest, response.ResponseFailed("token is not valid"))
@@ -49,11 +49,25 @@ func (ch *CartHandler) DeleteCartHandler() echo.HandlerFunc {
 		idn := c.Param("id")
 		id, _ := strconv.Atoi(idn)
 
-		//if idToken != int(cartDelete.UserId) {
-		//	return c.JSON(http.StatusBadRequest, response.ResponseFailed("Data not exist"))
-		//}
+		fmt.Println("id", id)
 
-		_, err := ch.cartService.DeleteCart(id)
+		cart, rows, err := ch.cartService.GetCartById(id)
+
+		fmt.Println(cart, "data")
+
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("failed to fetch data"))
+		}
+
+		if rows == 0 {
+			return c.JSON(http.StatusBadRequest, response.ResponseFailed("cart not exist"))
+		}
+
+		if idToken != int(cart.UserId) {
+			return c.JSON(http.StatusBadRequest, response.ResponseFailed("id not found"))
+		}
+
+		_, err = ch.cartService.DeleteCart(id)
 
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("Failed delete data"))

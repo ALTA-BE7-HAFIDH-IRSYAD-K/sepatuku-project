@@ -118,7 +118,27 @@ func (ph *ProductHandler) UpdateProductHandler() echo.HandlerFunc {
 		if idToken != int(product.UserID) {
 			return c.JSON(http.StatusBadRequest, response.ResponseFailed("product not exist"))
 		}
+		name_product := product.Name_product
+		description := product.Description
+		price := product.Price
+		image := product.Image
+		stock := product.Stock
 		c.Bind(&product)
+		if product.Name_product == "" {
+			product.Name_product = name_product
+		}
+		if product.Description == "" {
+			product.Description = description
+		}
+		if product.Price == 0 {
+			product.Price = price
+		}
+		if product.Image == "" {
+			product.Image = image
+		}
+		if product.Stock == 0 {
+			product.Stock = stock
+		}
 		product, err = ph.productService.UpdateProduct(product, id)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("failed edit product"))

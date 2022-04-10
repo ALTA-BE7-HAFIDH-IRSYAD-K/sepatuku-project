@@ -62,6 +62,9 @@ func (ur *UserRepository) CreateUser(user _entities.User) (_entities.User, int, 
 	if user.Phone == "" {
 		return user, 0, fmt.Errorf("insert your phone number")
 	}
+	if user.Avatar == "" {
+		user.Avatar = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
+	}
 	tx := ur.database.Save(&user)
 	if tx.Error != nil {
 		return user, 0, tx.Error

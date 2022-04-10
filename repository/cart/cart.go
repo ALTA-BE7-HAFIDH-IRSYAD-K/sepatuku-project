@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gorm.io/gorm"
 	_entities "sepatuku-project/entity/cart"
+	"sepatuku-project/entity/product"
 )
 
 type CartRepository struct {
@@ -16,26 +17,46 @@ func NewCartRepository(db *gorm.DB) *CartRepository {
 	}
 }
 
-func (cr *CartRepository) GetAllCart() ([]_entities.Cart, error) {
+func (cr *CartRepository) GetAllCart(id int) ([]_entities.Cart, []product.Product, error) {
 	var cart []_entities.Cart
-	tx := cr.database.Find(&cart)
+	var productId []product.Product
 
-	if tx.Error != nil {
-		return nil, tx.Error
+	idCart := make([]int, 0)
+
+	tx := cr.database.Where("user_id", id).Find(&cart)
+
+	for i := 0; i < len(cart); i++ {
+		idCart = append(idCart, int(cart[i].ProductId))
 	}
 
-	return cart, nil
+	err := cr.database.Where("id", idCart).Find(&productId)
+
+	fmt.Println("productId", productId)
+	fmt.Println("cart", cart)
+
+	if tx.Error != nil {
+		return cart, productId, tx.Error
+	}
+
+	if tx.Error != nil {
+		return cart, productId, err.Error
+	}
+
+	return cart, productId, nil
 }
 
-func (cr *CartRepository) CreateCart(id int, cart _entities.Cart) (_entities.Cart, error) {
+func (cr *CartRepository) CreateCart(cart _entities.Cart) (_entities.Cart, error) {
 	//var productId product.Product
 
-	cart.UserId = uint(id)
-	//cart.ProductId = productId.ID
+	fmt.Println(cart, "Add-Cart")
 
-	fmt.Println(cart.Product, "cart")
+	err := cr.database.Where("id", cart.ProductId).Find(&cart)
 
 	tx := cr.database.Save(&cart)
+
+	if tx.Error != nil {
+		return cart, err.Error
+	}
 
 	if tx.Error != nil {
 		return cart, tx.Error
@@ -49,7 +70,7 @@ func (cr *CartRepository) CreateCart(id int, cart _entities.Cart) (_entities.Car
 
 func (cr *CartRepository) DeleteCart(id int) (_entities.Cart, error) {
 	var cart _entities.Cart
-	tx := cr.database.Delete(&cart, id)
+	tx := cr.database.Delete(id)
 
 	if tx.Error != nil {
 		return cart, tx.Error
@@ -57,6 +78,17 @@ func (cr *CartRepository) DeleteCart(id int) (_entities.Cart, error) {
 	if tx.RowsAffected == 0 {
 		return cart, tx.Error
 
+	}
+	return cart, nil
+}
+
+func (cr *CartRepository) UpdateQuantity(cart _entities.Cart) (_entities.Cart, error) {
+	tx := cr.database.Save(&cart)
+	if tx.Error != nil {
+		return cart, tx.Error
+	}
+	if tx.RowsAffected == 0 {
+		return cart, tx.Error
 	}
 	return cart, nil
 }

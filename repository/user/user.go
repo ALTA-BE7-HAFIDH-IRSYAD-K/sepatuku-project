@@ -21,7 +21,7 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 func (ur *UserRepository) GetUser(id int) (_entities.User, []_entitiesproduct.Product, int, error) {
 	var users _entities.User
 	var product []_entitiesproduct.Product
-	type produk interface{}
+
 	tx := ur.database.Find(&users, id)
 	if tx.Error != nil {
 		return users, product, 0, tx.Error
@@ -29,6 +29,7 @@ func (ur *UserRepository) GetUser(id int) (_entities.User, []_entitiesproduct.Pr
 	if tx.RowsAffected == 0 {
 		return users, product, 0, tx.Error
 	}
+
 	err := ur.database.Where("user_id", id).Find(&product)
 	if tx.Error != nil {
 		return users, product, 0, err.Error

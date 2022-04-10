@@ -14,6 +14,7 @@ import (
 func RegisterAuthPath(e *echo.Echo, ah *_authHandler.AuthHandler) {
 	e.POST("/api/v1/auth", ah.LoginHandler())
 }
+
 func UserPath(e *echo.Echo, uh *_userHandler.UserHandler) {
 	e.POST("/api/v1/users", uh.CreateUserHandler())
 	e.GET("/api/v1/users", uh.GetUserHandler(), _middlewares.JWTMiddleware())
@@ -28,8 +29,9 @@ func CartPath(e *echo.Echo, ch *_cartHandler.CartHandler) {
 }
 
 func OrderPath(e *echo.Echo, oh *_orderHandler.OrderHandler) {
-	e.POST("/api/v1/order/", oh.CreateOrderProduct())
-	e.GET("/api/v1/order/history", oh.GetAllHistoryOrderProduct())
+	e.POST("/api/v1/orders", oh.CreateOrderProduct(), _middlewares.JWTMiddleware())
+	e.GET("/api/v1/orders/history", oh.GetAllHistoryOrderProduct(), _middlewares.JWTMiddleware())
+	e.PUT("/api/v1/orders/history/status/:id", oh.UpdateOrderStatus(), _middlewares.JWTMiddleware())
 }
 
 func ProductPath(e *echo.Echo, ph *_productHandler.ProductHandler) {

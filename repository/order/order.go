@@ -1,6 +1,7 @@
 package order
 
 import (
+	"fmt"
 	"gorm.io/gorm"
 	_order "sepatuku-project/entity/order"
 )
@@ -15,8 +16,22 @@ func NewRepositoryOrder(database *gorm.DB) *RepositoryOrder {
 	}
 }
 
-func (ro *RepositoryOrder) GetOrderHistory() ([]_order.HistoryOrder, error) {
-	var historyOrder []_order.HistoryOrder
+func (ro *RepositoryOrder) GetOrderById(id int) (_order.Order, int, error) {
+	var order _order.Order
+	tx := ro.database.Find(&order, id)
+
+	if tx.Error != nil {
+		return order, 0, tx.Error
+	}
+	if tx.RowsAffected == 0 {
+		return order, 0, tx.Error
+	}
+	return order, int(tx.RowsAffected), nil
+}
+
+func (ro *RepositoryOrder) GetOrderHistory() ([]_order.Order, error) {
+	var historyOrder []_order.Order
+
 	tx := ro.database.Find(&historyOrder)
 
 	if tx.Error != nil {
@@ -26,8 +41,8 @@ func (ro *RepositoryOrder) GetOrderHistory() ([]_order.HistoryOrder, error) {
 	return historyOrder, nil
 }
 
-func (ro *RepositoryOrder) CreateOrder(id int, order _order.Order) (_order.Order, error) {
-	order.UserId = uint(id)
+func (ro *RepositoryOrder) CreateOrder(order _order.Order) (_order.Order, error) {
+	fmt.Println("order", order)
 	tx := ro.database.Save(&order)
 
 	if tx.Error != nil {
@@ -37,5 +52,16 @@ func (ro *RepositoryOrder) CreateOrder(id int, order _order.Order) (_order.Order
 		return order, tx.Error
 	}
 
+	return order, nil
+}
+
+func (ro *RepositoryOrder) UpdatedHistoryOrder(order _order.Order) (_order.Order, error) {
+	tx := ro.database.Save(&order)
+	if tx.Error != nil {
+		return order, tx.Error
+	}
+	if tx.RowsAffected == 0 {
+		return order, tx.Error
+	}
 	return order, nil
 }

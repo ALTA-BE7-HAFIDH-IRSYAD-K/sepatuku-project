@@ -1,8 +1,12 @@
 package order
 
-import "sepatuku-project/entity/order"
+import (
+	"sepatuku-project/entity/order"
+)
 
 type ServiceOrderInterface interface {
-	CreateOrder(id int, order order.Order) (order.Order, error)
-	GetOrderHistory() ([]order.HistoryOrder, error)
+	CreateOrder(order order.Order) (order.Order, error)
+	GetOrderHistory() ([]order.Order, error)
+	GetOrderHistoryById(id int) (order.Order, int, error)
+	UpdatedHistoryOrder(order order.Order, id int) (order.Order, error)
 }

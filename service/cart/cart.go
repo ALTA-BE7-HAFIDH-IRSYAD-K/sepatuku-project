@@ -2,6 +2,7 @@ package cart
 
 import (
 	"sepatuku-project/entity/cart"
+	"sepatuku-project/entity/product"
 	_cart "sepatuku-project/repository/cart"
 )
 
@@ -15,11 +16,10 @@ func NewCartService(cartRepo _cart.CartInterfaceRepository) CartInterfaceService
 	}
 }
 
-func (cs *CartService) CreateCart(id int, cart cart.Cart) (cart.Cart, error) {
+func (cs *CartService) CreateCart(cart cart.Cart) (cart.Cart, error) {
 	//TODO implement me
-	cartCreate, err := cs.cartService.CreateCart(id, cart)
+	cartCreate, err := cs.cartService.CreateCart(cart)
 	return cartCreate, err
-
 }
 
 func (cs *CartService) DeleteCart(id int) (cart.Cart, error) {
@@ -28,8 +28,8 @@ func (cs *CartService) DeleteCart(id int) (cart.Cart, error) {
 	return deleteCart, err
 }
 
-func (cs *CartService) GetAllCart() (cart []cart.Cart, err error) {
+func (cs *CartService) GetAllCart(id int) ([]cart.Cart, []product.Product, error) {
 	//TODO implement me
-	getCart, err := cs.cartService.GetAllCart()
-	return getCart, err
+	cart, product, err := cs.cartService.GetAllCart(id)
+	return cart, product, err
 }

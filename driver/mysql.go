@@ -34,9 +34,10 @@ func InitDB(configs *configs.AppConfig) *gorm.DB {
 }
 
 func InitialMigration(db *gorm.DB) {
-	db.AutoMigrate(&user.User{})
-	db.AutoMigrate(&product.Product{})
-	db.AutoMigrate(&cart.Cart{})
-	db.AutoMigrate(&order.Order{})
-	db.AutoMigrate(&order.HistoryOrder{})
+	err := db.AutoMigrate(&user.User{}, &product.Product{}, &cart.Cart{}, &order.Order{}, &order.HistoryOrder{})
+
+	if err != nil {
+		log.Info("error auto migrate", err)
+	}
+
 }

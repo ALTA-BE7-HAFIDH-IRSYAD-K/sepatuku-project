@@ -1,0 +1,15 @@
+mode: set
+sepatuku-project/service/user/user.go:16.92,20.2 1 1
+sepatuku-project/service/user/user.go:22.98,25.2 2 1
+sepatuku-project/service/user/user.go:26.107,31.2 4 0
+sepatuku-project/service/user/user.go:33.73,36.2 2 1
+sepatuku-project/service/user/user.go:38.92,45.2 6 1
+sepatuku-project/service/user/user.go:47.96,55.2 7 1
+sepatuku-project/service/auth/auth.go:11.92,15.2 1 1
+sepatuku-project/service/auth/auth.go:16.83,19.2 2 1
+sepatuku-project/service/product/product.go:12.107,16.2 1 1
+sepatuku-project/service/product/product.go:18.72,21.2 2 1
+sepatuku-project/service/product/product.go:23.78,26.2 2 1
+sepatuku-project/service/product/product.go:28.76,31.2 2 1
+sepatuku-project/service/product/product.go:32.100,35.2 2 1
+sepatuku-project/service/product/product.go:36.103,40.2 3 1

@@ -6,7 +6,7 @@ import (
 )
 
 type CartInterfaceService interface {
-	CreateCart(cart _cart.Cart) (_cart.Cart, error)
+	CreateCart(cart _cart.Cart) (_cart.CartResponseCreate, error)
 	DeleteCart(id int) (_cart.Cart, error)
 	GetAllCart(id int) ([]_cart.Cart, []product.Product, error)
 	UpdateQuantity(cart _cart.Cart, id int) (_cart.Cart, error)

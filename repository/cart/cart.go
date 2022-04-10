@@ -2,9 +2,11 @@ package cart
 
 import (
 	"fmt"
-	"gorm.io/gorm"
 	_entities "sepatuku-project/entity/cart"
 	"sepatuku-project/entity/product"
+
+	"github.com/jinzhu/copier"
+	"gorm.io/gorm"
 )
 
 type CartRepository struct {
@@ -19,34 +21,24 @@ func NewCartRepository(db *gorm.DB) *CartRepository {
 
 func (cr *CartRepository) GetAllCart(id int) ([]_entities.Cart, []product.Product, error) {
 	var cart []_entities.Cart
+	var cartObject []_entities.CartResponse
 	var productId []product.Product
 
-	idCart := make([]int, 0)
+	tx := cr.database.Joins("left join products on carts.product_id = products.id").Joins("left join users on carts.user_id = users.id").Where("carts.user_id", id).Find(&cart)
 
-	tx := cr.database.Where("user_id", id).Find(&cart)
+	copier.Copy(&cartObject, &cart)
 
-	for i := 0; i < len(cart); i++ {
-		idCart = append(idCart, int(cart[i].ProductId))
-	}
-
-	err := cr.database.Where("id", idCart).Find(&productId)
-
-	fmt.Println("productId", productId)
-	fmt.Println("cart", cart)
+	fmt.Println(cartObject, "cartObject")
 
 	if tx.Error != nil {
 		return cart, productId, tx.Error
 	}
 
-	if tx.Error != nil {
-		return cart, productId, err.Error
-	}
-
 	return cart, productId, nil
 }
 
-func (cr *CartRepository) CreateCart(cart _entities.Cart) (_entities.Cart, error) {
-	//var productId product.Product
+func (cr *CartRepository) CreateCart(cart _entities.Cart) (_entities.CartResponseCreate, error) {
+	var cartObject _entities.CartResponseCreate
 
 	fmt.Println(cart, "Add-Cart")
 
@@ -54,18 +46,22 @@ func (cr *CartRepository) CreateCart(cart _entities.Cart) (_entities.Cart, error
 
 	tx := cr.database.Save(&cart)
 
+	copier.Copy(&cartObject, &cart)
+
 	if tx.Error != nil {
-		return cart, err.Error
+		return cartObject, err.Error
 	}
 
 	if tx.Error != nil {
-		return cart, tx.Error
+		return cartObject, tx.Error
 	}
 	if tx.RowsAffected == 0 {
-		return cart, tx.Error
+		return cartObject, tx.Error
 	}
 
-	return cart, nil
+	fmt.Println("cartObject", cartObject)
+
+	return cartObject, nil
 }
 
 func (cr *CartRepository) DeleteCart(id int) (_entities.Cart, error) {

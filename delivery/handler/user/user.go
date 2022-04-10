@@ -27,14 +27,14 @@ func (uh *UserHandler) GetUserHandler() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, response.ResponseFailed("bad request"))
 		}
 		id := idToken
-		user, product, rows, err := uh.userService.GetUser(id)
+		userRes, product, rows, err := uh.userService.GetProfile(id)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("failed to get user profile"))
 		}
 		if rows == 0 {
 			return c.JSON(http.StatusBadRequest, response.ResponseFailed("data not exist"))
 		}
-		return c.JSON(http.StatusOK, response.ResponseUser("success get user profile", user, product))
+		return c.JSON(http.StatusOK, response.ResponseUser("success get user profile", userRes, product))
 	}
 }
 

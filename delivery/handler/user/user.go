@@ -72,6 +72,10 @@ func (uh *UserHandler) CreateUserHandler() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, response.ResponseFailed("username/email already exist"))
 
 		}
+		if row == 0 {
+			return c.JSON(http.StatusBadRequest, response.ResponseFailed("please complete data filling"))
+
+		}
 		return c.JSON(http.StatusOK, response.ResponseSuccess("register successfully", userRes))
 	}
 }
@@ -90,7 +94,31 @@ func (uh *UserHandler) UpdatedUserHandler() echo.HandlerFunc {
 		if rows == 0 {
 			return c.JSON(http.StatusBadRequest, response.ResponseFailed("data not exist"))
 		}
+		username := user.Username
+		email := user.Email
+		password := user.Password
+		address := user.Address
+		phone := user.Phone
+		ava := user.Avatar
 		c.Bind(&user)
+		if user.Username == "" {
+			user.Username = username
+		}
+		if user.Email == "" {
+			user.Email = email
+		}
+		if user.Password == "" {
+			user.Password = password
+		}
+		if user.Address == "" {
+			user.Address = address
+		}
+		if user.Phone == "" {
+			user.Phone = phone
+		}
+		if user.Avatar == "" {
+			user.Avatar = ava
+		}
 		userRes, err := uh.userService.UpdatedUser(user, id)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("failed edit user profile"))

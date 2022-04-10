@@ -16,6 +16,28 @@ func NewCartService(cartRepo _cart.CartInterfaceRepository) CartInterfaceService
 	}
 }
 
+func (cs *CartService) UpdateQuantity(cart cart.Cart, id int) (cart.Cart, error) {
+	//TODO implement me
+	cartId, _, err := cs.cartService.GetCartById(id)
+
+	cartId.Quantity = cart.Quantity
+
+	if err != nil {
+		return cartId, err
+	}
+
+	updateQuantity, err := cs.cartService.UpdateQuantity(cartId)
+
+	return updateQuantity, nil
+
+}
+
+func (cs *CartService) GetCartById(id int) (cart.Cart, int, error) {
+	//TODO implement me
+	cartId, row, err := cs.cartService.GetCartById(id)
+	return cartId, row, err
+}
+
 func (cs *CartService) CreateCart(cart cart.Cart) (cart.Cart, error) {
 	//TODO implement me
 	cartCreate, err := cs.cartService.CreateCart(cart)

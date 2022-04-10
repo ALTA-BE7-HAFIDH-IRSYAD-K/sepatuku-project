@@ -26,6 +26,8 @@ func CartPath(e *echo.Echo, ch *_cartHandler.CartHandler) {
 	e.POST("/api/v1/carts", ch.CreateCartHandler(), _middlewares.JWTMiddleware())
 	e.GET("/api/v1/carts", ch.GetAllCartHandler(), _middlewares.JWTMiddleware())
 	e.DELETE("/api/v1/carts/:id", ch.DeleteCartHandler(), _middlewares.JWTMiddleware())
+	e.GET("/api/v1/carts/:id", ch.GetCartByIdHandler(), _middlewares.JWTMiddleware())
+	e.PUT("/api/v1/carts/:id", ch.UpdateQuantityHandler(), _middlewares.JWTMiddleware())
 }
 
 func OrderPath(e *echo.Echo, oh *_orderHandler.OrderHandler) {

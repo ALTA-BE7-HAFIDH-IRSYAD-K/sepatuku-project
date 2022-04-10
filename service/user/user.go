@@ -30,9 +30,9 @@ func (uuc *UserService) GetProfile(id int) (_entities.UserRespon, []_entitiespro
 	return userRes, product, rows, err
 }
 
-func (uuc *UserService) DeleteUser(id int) (_entities.User, error) {
-	user, err := uuc.userRepository.DeleteUser(id)
-	return user, err
+func (uuc *UserService) DeleteUser(id int) (_entities.User, int, error) {
+	user, rowDel, err := uuc.userRepository.DeleteUser(id)
+	return user, rowDel, err
 }
 
 func (uuc *UserService) CreateUser(user _entities.User) (_entities.UserRespon, int, error) {

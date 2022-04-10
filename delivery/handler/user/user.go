@@ -52,9 +52,12 @@ func (uh *UserHandler) DeleteUserHandler() echo.HandlerFunc {
 		if rows == 0 {
 			return c.JSON(http.StatusBadRequest, response.ResponseFailed("data not exist"))
 		}
-		_, err = uh.userService.DeleteUser(id)
+		_, rowDel, err := uh.userService.DeleteUser(id)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("failed delete user"))
+		}
+		if rowDel == 0 {
+			return c.JSON(http.StatusBadRequest, response.ResponseFailed("product not zero"))
 		}
 		return c.JSON(http.StatusOK, response.ResponseSuccessWithoutData("success delete user"))
 	}

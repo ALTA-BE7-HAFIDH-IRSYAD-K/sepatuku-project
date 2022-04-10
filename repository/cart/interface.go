@@ -2,10 +2,12 @@ package cart
 
 import (
 	_cart "sepatuku-project/entity/cart"
+	"sepatuku-project/entity/product"
 )
 
 type CartInterfaceRepository interface {
-	CreateCart(id int, cart _cart.Cart) (_cart.Cart, error)
+	CreateCart(cart _cart.Cart) (_cart.Cart, error)
 	DeleteCart(id int) (_cart.Cart, error)
-	GetAllCart() (cart []_cart.Cart, err error)
+	//GetAllCart() ([]product.Product, error)
+	GetAllCart(id int) ([]_cart.Cart, []product.Product, error)
 }

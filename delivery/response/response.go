@@ -14,8 +14,8 @@ func ResponseUser(message string, data interface{}, product interface{}) map[str
 	return map[string]interface{}{
 		"status":       "success",
 		"message":      message,
-		"data_user":    data,
 		"data_product": product,
+		"data_user":    data,
 	}
 }
 

@@ -21,14 +21,11 @@ func NewCartRepository(db *gorm.DB) *CartRepository {
 
 func (cr *CartRepository) GetAllCart(id int) ([]_entities.Cart, []product.Product, error) {
 	var cart []_entities.Cart
-	var cartObject []_entities.CartResponse
 	var productId []product.Product
 
-	tx := cr.database.Joins("left join products on carts.product_id = products.id").Joins("left join users on carts.user_id = users.id").Where("carts.user_id", id).Find(&cart)
+	tx := cr.database.Preload("Product").Where("user_id", id).Find(&cart)
 
-	copier.Copy(&cartObject, &cart)
-
-	fmt.Println(cartObject, "cartObject")
+	fmt.Println(cart, "cart")
 
 	if tx.Error != nil {
 		return cart, productId, tx.Error

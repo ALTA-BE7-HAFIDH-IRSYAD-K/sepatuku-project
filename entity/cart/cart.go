@@ -18,7 +18,7 @@ type Cart struct {
 	Price        uint            `json:"price" form:"price"`
 	Image        string          `json:"image" form:"image"`
 	Stock        uint            `json:"stock" form:"stock"`
-	Product      product.Product `json:"product" form:"product" gorm:"foreignKey:ProductId;references:ID"`
+	Product      product.Product `gorm:"foreignKey:ProductId;references:ID"`
 }
 
 type CartResponse struct {

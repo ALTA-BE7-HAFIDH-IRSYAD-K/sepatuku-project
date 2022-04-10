@@ -42,8 +42,8 @@ func (o *ServiceOrder) CreateOrder(order order.Order) (order.Order, error) {
 	return newOrder, err
 }
 
-func (o *ServiceOrder) GetOrderHistory() ([]order.Order, error) {
+func (o *ServiceOrder) GetOrderHistory(id int) ([]order.Order, error) {
 	//TODO implement me
-	getOrder, err := o.orderService.GetOrderHistory()
+	getOrder, err := o.orderService.GetOrderHistory(id)
 	return getOrder, err
 }

@@ -2,8 +2,9 @@ package order
 
 import (
 	"fmt"
-	"gorm.io/gorm"
 	_order "sepatuku-project/entity/order"
+
+	"gorm.io/gorm"
 )
 
 type RepositoryOrder struct {
@@ -29,10 +30,12 @@ func (ro *RepositoryOrder) GetOrderById(id int) (_order.Order, int, error) {
 	return order, int(tx.RowsAffected), nil
 }
 
-func (ro *RepositoryOrder) GetOrderHistory() ([]_order.Order, error) {
+func (ro *RepositoryOrder) GetOrderHistory(id int) ([]_order.Order, error) {
 	var historyOrder []_order.Order
 
-	tx := ro.database.Find(&historyOrder)
+	tx := ro.database.Preload("Cart").Preload("Cart.Product").Where("user_id", id).Find(&historyOrder)
+
+	fmt.Println("historyOrder", historyOrder)
 
 	if tx.Error != nil {
 		return nil, tx.Error

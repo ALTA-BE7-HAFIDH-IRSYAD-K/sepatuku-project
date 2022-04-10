@@ -38,7 +38,7 @@ func (cs *CartService) GetCartById(id int) (cart.Cart, int, error) {
 	return cartId, row, err
 }
 
-func (cs *CartService) CreateCart(cart cart.Cart) (cart.Cart, error) {
+func (cs *CartService) CreateCart(cart cart.Cart) (cart.CartResponseCreate, error) {
 	//TODO implement me
 	cartCreate, err := cs.cartService.CreateCart(cart)
 	return cartCreate, err

@@ -1,8 +1,9 @@
 package order
 
 import (
-	"gorm.io/gorm"
 	"sepatuku-project/entity/cart"
+
+	"gorm.io/gorm"
 )
 
 type Order struct {

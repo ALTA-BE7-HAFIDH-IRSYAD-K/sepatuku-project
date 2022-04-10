@@ -6,7 +6,7 @@ import (
 )
 
 type CartInterfaceRepository interface {
-	CreateCart(cart _cart.Cart) (_cart.Cart, error)
+	CreateCart(cart _cart.Cart) (_cart.CartResponseCreate, error)
 	DeleteCart(id int) (_cart.Cart, error)
 	GetCartById(id int) (_cart.Cart, int, error)
 	GetAllCart(id int) ([]_cart.Cart, []product.Product, error)

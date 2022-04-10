@@ -33,9 +33,6 @@ func (ch *CartHandler) GetAllCartHandler() echo.HandlerFunc {
 			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("failed fetch data"))
 		}
 
-		if len(allCart) == 0 {
-			return c.JSON(http.StatusBadRequest, response.ResponseFailed("Data not exist"))
-		}
 		return c.JSON(http.StatusOK, response.ResponseSuccess("success get all data allCart", allCart))
 	}
 }

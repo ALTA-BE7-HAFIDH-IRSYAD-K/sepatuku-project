@@ -1,8 +1,9 @@
 package cart
 
 import (
-	"gorm.io/gorm"
 	"sepatuku-project/entity/product"
+
+	"gorm.io/gorm"
 )
 
 type Cart struct {
@@ -11,5 +12,6 @@ type Cart struct {
 	ProductId  uint            `json:"product_id" form:"product_id"`
 	Quantity   uint            `json:"quantity" form:"quantity"`
 	TotalPrice uint            `json:"total_price" form:"total_price"`
+	Status     string          `json:"status" form:"status"`
 	Product    product.Product `json:"product" form:"product" gorm:"foreignKey:ProductId;references:ID"`
 }

@@ -82,20 +82,57 @@ func (ch *CartHandler) CreateCartHandler() echo.HandlerFunc {
 
 		newCart, err := ch.cartService.CreateCart(cartNew)
 
-		//for _, value := range product {
-		//	value.ID = newCart.Product.ID
-		//	value.Name_product = newCart.Product.Name_product
-		//	value.Description = newCart.Product.Description
-		//	value.Price = newCart.Product.Price
-		//	value.Image = newCart.Product.Image
-		//	value.Stock = newCart.Product.Stock
-		//}
-
 		fmt.Println("newCart", newCart)
 
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("Failed create data"))
 		}
 		return c.JSON(http.StatusOK, response.ResponseSuccess("success create data cart", newCart))
+	}
+}
+
+func (ch *CartHandler) UpdateQuantityHandler() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		var cartUpdate _cart.Cart
+
+		idToken, tokenErr := _middlewares.ReadTokenId(c)
+		cartUpdate.UserId = uint(idToken)
+
+		if tokenErr != nil {
+			return c.JSON(http.StatusBadRequest, response.ResponseFailed("Bad Request"))
+		}
+		idn := c.Param("id")
+		id, _ := strconv.Atoi(idn)
+
+		c.Bind(&cartUpdate)
+
+		cartId, err := ch.cartService.UpdateQuantity(cartUpdate, id)
+
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("Failed edit data"))
+		}
+		return c.JSON(http.StatusOK, response.ResponseSuccess("Success edit quantity", cartId))
+	}
+}
+
+func (ch *CartHandler) GetCartByIdHandler() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		idToken, tokenErr := _middlewares.ReadTokenId(c)
+		if tokenErr != nil {
+			return c.JSON(http.StatusBadRequest, response.ResponseFailed("Bad Request"))
+		}
+		idn := c.Param("id")
+		id, _ := strconv.Atoi(idn)
+		cartById, rows, err := ch.cartService.GetCartById(id)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, response.ResponseFailed("Failed to fetch data"))
+		}
+		if rows == 0 {
+			return c.JSON(http.StatusBadRequest, response.ResponseFailed("data not exist"))
+		}
+		if cartById.UserId != uint(idToken) {
+			return c.JSON(http.StatusBadRequest, response.ResponseFailed("data not exist"))
+		}
+		return c.JSON(http.StatusOK, response.ResponseSuccess("success get data", cartById))
 	}
 }

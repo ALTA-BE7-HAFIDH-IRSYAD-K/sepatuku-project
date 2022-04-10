@@ -82,6 +82,19 @@ func (cr *CartRepository) DeleteCart(id int) (_entities.Cart, error) {
 	return cart, nil
 }
 
+func (cr *CartRepository) GetCartById(id int) (_entities.Cart, int, error) {
+	var cart _entities.Cart
+	tx := cr.database.Find(&cart, id)
+
+	if tx.Error != nil {
+		return cart, 0, tx.Error
+	}
+	if tx.RowsAffected == 0 {
+		return cart, 0, tx.Error
+	}
+	return cart, int(tx.RowsAffected), nil
+}
+
 func (cr *CartRepository) UpdateQuantity(cart _entities.Cart) (_entities.Cart, error) {
 	tx := cr.database.Save(&cart)
 	if tx.Error != nil {
